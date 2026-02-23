@@ -42,5 +42,5 @@ RF15 - O sistema deve enviar uma msg via whats ou email para lembrar o cliente d
 
 # Organização:
 * Trello
-* Branch main/release
-* Github actions
+* Branch main/feature
+* Github flow
