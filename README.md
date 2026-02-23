@@ -6,3 +6,14 @@ Além disso, o cliente muitas vezes não tem visibilidade dos horários disponí
 
 # Solução 
 Este sistema de agendamento foi desenvolvido para automatizar e organizar o processo de marcação de horários em barbearias, trazendo mais eficiência tanto para o cliente quanto para o barbeiro.
+
+* Aplicação WEB
+* Java (Familiaridade, Libs, OOP, organizado, roda bem)
+* Framework Spring (facil/rapido, ecossistema completo)
+* React 
+* DB Relacional
+
+Organização:
+* Trello
+* Branch main/release
+* Github actions
