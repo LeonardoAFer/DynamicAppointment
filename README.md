@@ -14,23 +14,23 @@ Este sistema de agendamento foi desenvolvido para automatizar e organizar o proc
 - Gerenciamento de serviços e agenda pelo administrador
  
 # Usuário:
-RF01 – O sistema deve permitir cadastro de usuários.
-RF02 – O sistema deve permitir autenticação via login e senha.
-RF03 – O sistema deve permitir atualização de perfil.
-RF04 – O sistema deve permitir visualizar serviços disponíveis.
-RF05 – O sistema deve permitir visualizar horários disponíveis.
-RF06 – O sistema deve permitir realizar agendamento.
-RF07 – O sistema deve permitir cancelar agendamento.
-RF08 – O sistema deve permitir visualizar histórico de agendamentos.
+RF01 – O sistema deve permitir cadastro de usuários.<br>
+RF02 – O sistema deve permitir autenticação via login e senha.<br>
+RF03 – O sistema deve permitir atualização de perfil.<br>
+RF04 – O sistema deve permitir visualizar serviços disponíveis.<br>
+RF05 – O sistema deve permitir visualizar horários disponíveis.<br>
+RF06 – O sistema deve permitir realizar agendamento.<br>
+RF07 – O sistema deve permitir cancelar agendamento.<br>
+RF08 – O sistema deve permitir visualizar histórico de agendamentos.<br>
  
 # Administrador:
-RF09 – O sistema deve permitir cadastro de serviços.
-RF10 – O sistema deve permitir edição e exclusão de serviços.
-RF11 – O sistema deve permitir definir horários de funcionamento.
-RF12 - O sistema deve permitir cadastrar funcionarios.
-RF13 – O sistema deve permitir visualizar todos os agendamentos.
-RF14 – O sistema deve permitir confirmar ou cancelar agendamentos.
-RF15 - O sistema deve enviar uma msg via whats ou email para lembrar o cliente do agendamento.
+RF09 – O sistema deve permitir cadastro de serviços.<br>
+RF10 – O sistema deve permitir edição e exclusão de serviços.<br>
+RF11 – O sistema deve permitir definir horários de funcionamento.<br>
+RF12 - O sistema deve permitir cadastrar funcionarios.<br>
+RF13 – O sistema deve permitir visualizar todos os agendamentos.<br>
+RF14 – O sistema deve permitir confirmar ou cancelar agendamentos.<br>
+RF15 - O sistema deve enviar uma msg via whats ou email para lembrar o cliente do agendamento.<br>
 
 # Tecnlogia:
 * Aplicação WEB
