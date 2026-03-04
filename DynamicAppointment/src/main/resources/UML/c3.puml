@@ -1,0 +1,41 @@
+@startuml C4_Agendamento_C3
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Sistema de Agendamento Dinâmico — Diagrama de Componentes (C3) — API Application
+
+Container_Boundary(api, "API Application") {
+
+    Component(agendamento, "Agendamento Dinâmico", "Spring Service", "Orquestra o fluxo principal\nde agendamento, coordenando\nos demais módulos.")
+
+    Component(appointment, "Modules/Appointment", "Controller, Service, Repository", "Gerencia a criação, consulta\ne cancelamento de agendamentos.\nPersiste e recupera dados no banco.")
+
+    Component(professional, "Modules/Professional", "Controller, Service, Repository", "Gerencia os profissionais\ndisponíveis para atendimento\n(ex: barbeiro, veterinário, médico).")
+
+    Component(services, "Modules/Services", "Controller, Service, Repository", "Gerencia os serviços oferecidos\npor tipo de negócio\n(ex: corte, banho, consulta).")
+
+    Component(motor, "Motor de Disponibilidade", "Spring Component", "Calcula e valida os horários\ndisponíveis com base nos\nprofissionais, serviços e\nagendamentos existentes.")
+
+    Component(auth, "Auth / JWT", "Spring Security, JWT", "Valida os dados do guest,\ngera e verifica tokens JWT\npara controle de acesso\nao agendamento.")
+
+    Component(notification, "Notificação", "Spring Service", "Envia token via link\npor e-mail ou WhatsApp\npara visualizar ou cancelar\no agendamento.")
+}
+
+ContainerDb(db, "Database", "PostgreSQL", "Armazena todos os dados\ndo sistema.")
+System_Ext(email, "Sistema de E-mail", "SendGrid / SES")
+System_Ext(whatsapp, "WhatsApp / SMS", "Twilio ou similar")
+
+Rel(agendamento, appointment, "Orquestra fluxo de agendamento")
+Rel(agendamento, auth, "Solicita validação e geração de JWT")
+Rel(appointment, motor, "Consulta disponibilidade")
+Rel(motor, professional, "Obtém profissionais disponíveis")
+Rel(motor, services, "Obtém serviços cadastrados")
+Rel(auth, notification, "Dispara envio do token ao guest")
+Rel(notification, email, "Envia link por e-mail", "SMTP / API")
+Rel(notification, whatsapp, "Envia link por WhatsApp", "API")
+Rel(appointment, db, "Lê e escreve agendamentos", "SQL")
+Rel(professional, db, "Lê e escreve profissionais", "SQL")
+Rel(services, db, "Lê e escreve serviços", "SQL")
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml C4_Agendamento_C2
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Sistema de Agendamento Dinâmico — Diagrama de Container (C2)
+
+Person(cliente, "Cliente", "Pessoa que realiza, consulta\ne cancela agendamentos.")
+
+System_Boundary(sistema, "Sistema de Agendamento Dinâmico") {
+
+    Container(web_app, "Web Application", "Java, Spring Boot", "Responsável por servir\na aplicação ao navegador\ne orquestrar as requisições\nentre frontend e backend.")
+
+    Container(ui, "Interface Gráfica", "React", "SPA consumida pelo cliente\nno navegador. Exibe calendários,\nserviços disponíveis e\nfluxo de agendamento.")
+
+    Container(api, "API Application", "REST API", "Processa a lógica de negócio:\nregras de agendamento,\nconfiguração dinâmica por tipo\nde negócio e gestão de horários.")
+
+    ContainerDb(db, "Database", "PostgreSQL", "Armazena clientes, agendamentos,\nserviços, profissionais,\nconfigurações de negócio\ne histórico de notificações.")
+}
+
+System_Ext(email, "Sistema de E-mail", "Serviço externo de envio de e-mails\n(ex: SendGrid, SES).\nResponsável por notificações\ne confirmações de agendamento.")
+
+Rel(cliente, ui, "Interage via navegador", "HTTPS")
+Rel(ui, web_app, "Requisições de navegação\ne renderização", "HTTPS")
+Rel(web_app, api, "Chama serviços de negócio", "JSON / REST API")
+Rel(api, db, "Lê e escreve dados", "SQL")
+Rel(api, email, "Envia notificações", "SMTP / API")
+Rel(email, cliente, "Entrega confirmações\ne lembretes", "E-mail")
+
+@enduml
+```
+
+### Fluxo atualizado
+```
+Cliente → Interface Gráfica (React) → Web Application (Java/Spring) → API Application → Database (PostgreSQL)
+                                                                                       → Sistema de E-mail → Cliente
