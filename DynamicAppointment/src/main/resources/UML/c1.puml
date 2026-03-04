@@ -1,0 +1,18 @@
+@startuml C4_Agendamento_C1
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Sistema de Agendamento Dinâmico — Diagrama de Contexto (C1)
+
+Person(cliente, "Cliente", "Usuário que realiza, consulta\ne cancela agendamentos.")
+
+System(sistema, "Sistema de Agendamento Dinâmico", "Permite que clientes agendem horários e serviços,\ngerenciando e calculando a disponibilidade em tempo real.")
+
+System_Ext(email, "Sistema de E-mail", "Serviço externo de envio de e-mails\nResponsável por notificações\ne confirmações de agendamento.")
+
+Rel(cliente, sistema, "Realiza agendamentos,\nconsulta disponibilidade\ne cancela horários", "HTTPS")
+Rel(sistema, email, "Envia confirmações,\nlembretes e cancelamentos", "SMTP / API")
+Rel(email, cliente, "Entrega notificações\ne confirmações", "E-mail")
+
+@enduml

@@ -1,0 +1,9 @@
+package com.leonardo.DynamicAppointment.modules.appointment.repository;
+
+import com.leonardo.DynamicAppointment.modules.appointment.entity.Appointment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+}
