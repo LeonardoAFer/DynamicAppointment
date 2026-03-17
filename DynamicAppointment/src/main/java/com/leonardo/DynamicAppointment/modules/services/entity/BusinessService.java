@@ -1,12 +1,19 @@
 package com.leonardo.DynamicAppointment.modules.services.entity;
 
+import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
+import com.leonardo.DynamicAppointment.modules.services.category.ServiceCategory;
+import com.leonardo.DynamicAppointment.modules.services.status.ServiceStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
+@EqualsAndHashCode(exclude = "professionals")
 @Entity
 @Table(name = "services")
 public class BusinessService {
@@ -19,7 +26,8 @@ public class BusinessService {
 
     private String description;
 
-    //TODO enum category (HAIR, BEARD ....)
+    @Enumerated(EnumType.STRING)
+    private ServiceCategory category;
 
     private Integer durationMinutes;
 
@@ -27,10 +35,11 @@ public class BusinessService {
 
     private BigDecimal price;
 
-    //TODO enum ServiceStatus  (ACTIVE, INACTIVE)
+    @Enumerated(EnumType.STRING)
+    private ServiceStatus status;
 
-    //TODO @ManyToMany(mappedBy = "services")
-    //    private Set<Professional> professionals;
+    @ManyToMany(mappedBy = "services")
+    private Set<Professional> professionals = new HashSet<>();
 
     private LocalDateTime createdAt;
 
