@@ -1,12 +1,17 @@
 package com.leonardo.DynamicAppointment.modules.professional.entity;
 
 import com.leonardo.DynamicAppointment.modules.professional.status.ProfessionalStatus;
+import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
+@EqualsAndHashCode(exclude = "services")
 @Entity
 @Table(name = "professionals")
 public class Professional {
@@ -22,7 +27,13 @@ public class Professional {
     @Enumerated(EnumType.STRING)
     private ProfessionalStatus status;
 
-    //TODO @ManyToMany map to BusinessService
+    @ManyToMany
+    @JoinTable(
+            name = "professional_services",
+            joinColumns = @JoinColumn(name = "professional_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id")
+    )
+    private Set<BusinessService> services = new HashSet<>();
 
     private LocalDateTime createdAt;
 
