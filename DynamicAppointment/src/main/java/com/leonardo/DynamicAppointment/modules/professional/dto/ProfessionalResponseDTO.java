@@ -1,6 +1,8 @@
 package com.leonardo.DynamicAppointment.modules.professional.dto;
 
 import com.leonardo.DynamicAppointment.modules.professional.status.ProfessionalStatus;
+import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
+import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceSummaryDTO;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,12 +32,12 @@ public class ProfessionalResponseDTO {
     @Enumerated(EnumType.STRING)
     private ProfessionalStatus status;
 
-    @ManyToMany
-    @JoinTable(
-            name = "professional_services",
-            joinColumns = @JoinColumn(name = "professional_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    private Set<BusinessService> services = new HashSet<>();
+//    @ManyToMany
+//    @JoinTable(
+//            name = "professional_services",
+//            joinColumns = @JoinColumn(name = "professional_id"),
+//            inverseJoinColumns = @JoinColumn(name = "service_id")
+//    )
+    private Set<BusinessServiceSummaryDTO> services = new HashSet<>();
 
 }
