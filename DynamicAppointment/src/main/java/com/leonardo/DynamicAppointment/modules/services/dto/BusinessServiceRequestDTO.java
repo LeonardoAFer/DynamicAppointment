@@ -18,10 +18,6 @@ import java.util.Set;
 @Data
 public class BusinessServiceRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String name;
 
     private String description;

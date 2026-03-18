@@ -4,8 +4,11 @@ import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalResp
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceRequestDTO;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
 import com.leonardo.DynamicAppointment.modules.services.service.BusinessServiceService;
+import org.apache.coyote.Response;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,5 +42,16 @@ public class BusinessServiceController {
     public ResponseEntity<BusinessServiceResponseDTO> fetchBusiness(@PathVariable Long id) {
         return new ResponseEntity<>(businessServiceService.fetch(id), HttpStatus.OK);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<BusinessServiceResponseDTO> updateBusiness(@PathVariable Long id, @RequestBody BusinessServiceRequestDTO request) {
+        return new ResponseEntity<>(businessServiceService.update(id, request), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteBusiness(@PathVariable Long id) {
+        businessServiceService.delete(id);
+    }
+
 
 }
