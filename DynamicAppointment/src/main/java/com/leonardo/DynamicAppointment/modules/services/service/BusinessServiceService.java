@@ -32,4 +32,25 @@ public class BusinessServiceService {
         return mapper.map(businessService, BusinessServiceResponseDTO.class);
     }
 
+    public BusinessServiceResponseDTO update(Long id, BusinessServiceRequestDTO request) {
+        BusinessService businessService = businessServiceRepository.findById(id).orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
+
+        businessService.setUpdatedAt(LocalDateTime.now());
+        businessService.setCategory(request.getCategory());
+        businessService.setName(request.getName());
+        businessService.setDescription(request.getDescription());
+        businessService.setPrice(request.getPrice());
+        businessService.setCleanupMinutes(request.getCleanupMinutes());
+        businessService.setDurationMinutes(request.getDurationMinutes());
+        businessService.setProfessionals(request.getProfessionals());
+
+        businessServiceRepository.save(businessService);
+
+        return mapper.map(businessService, BusinessServiceResponseDTO.class);
+    }
+
+    public void delete(Long id){
+        businessServiceRepository.deleteById(id);
+    }
+
 }
