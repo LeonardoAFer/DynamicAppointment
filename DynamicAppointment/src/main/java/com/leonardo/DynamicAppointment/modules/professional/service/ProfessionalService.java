@@ -1,5 +1,6 @@
 package com.leonardo.DynamicAppointment.modules.professional.service;
 
+import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
 import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalRequestDTO;
 import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalResponseDTO;
 import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
@@ -53,15 +54,15 @@ public class ProfessionalService {
         Professional professional = professionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professional not found with id: " + id));
 
-        professional.setName(request.getName());
-        professional.setStatus(request.getStatus());
-        professional.setEmail(request.getEmail());
+        UpdateHelper.updateIfPresent(request.getName(), professional::setName);
+        UpdateHelper.updateIfPresent(request.getStatus(), professional::setStatus);
+        UpdateHelper.updateIfPresent(request.getEmail(), professional::setEmail);
         professional.setUpdatedAt(LocalDateTime.now());
 
-        if (request.getServiceIds() != null) {
-            Set<BusinessService> services = new HashSet<>(businessServiceRepository.findAllById(request.getServiceIds()));
+        UpdateHelper.updateIfPresent(request.getServiceIds(), ids -> {
+            Set<BusinessService> services = new HashSet<>(businessServiceRepository.findAllById(ids));
             professional.setServices(services);
-        }
+        });
 
         professionalRepository.save(professional);
         return mapper.map(professional, ProfessionalResponseDTO.class);
