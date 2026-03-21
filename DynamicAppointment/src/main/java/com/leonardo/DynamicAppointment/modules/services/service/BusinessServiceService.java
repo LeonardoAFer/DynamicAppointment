@@ -51,8 +51,6 @@ public class BusinessServiceService {
         return mapper.map(businessService, BusinessServiceResponseDTO.class);
     }
 
-<<<<<<< Updated upstream
-=======
     public BusinessServiceResponseDTO update(Long id, BusinessServiceRequestDTO request) {
         BusinessService businessService = businessServiceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
@@ -90,6 +88,4 @@ public class BusinessServiceService {
         }
         businessServiceRepository.deleteById(id);
     }
-
->>>>>>> Stashed changes
 }
