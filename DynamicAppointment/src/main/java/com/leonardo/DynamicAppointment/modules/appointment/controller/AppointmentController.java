@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/appointments")
 public class AppointmentController {
 
-//    @GetMapping("/availability/{date}/{service_id}/{professional_id}")
-//    public
+
 
 }
