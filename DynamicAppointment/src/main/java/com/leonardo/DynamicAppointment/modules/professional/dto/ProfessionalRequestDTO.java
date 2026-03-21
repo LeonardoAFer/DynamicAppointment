@@ -1,6 +1,7 @@
 package com.leonardo.DynamicAppointment.modules.professional.dto;
 
 import com.leonardo.DynamicAppointment.modules.professional.status.ProfessionalStatus;
+<<<<<<< Updated upstream
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,6 +14,10 @@ import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+=======
+import lombok.Data;
+
+>>>>>>> Stashed changes
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,15 +32,8 @@ public class ProfessionalRequestDTO {
 
     private String email;
 
-    @Enumerated(EnumType.STRING)
     private ProfessionalStatus status;
 
-    @ManyToMany
-    @JoinTable(
-            name = "professional_services",
-            joinColumns = @JoinColumn(name = "professional_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
-    )
-    private Set<BusinessService> services = new HashSet<>();
+    private Set<Long> serviceIds = new HashSet<>();
 
 }
