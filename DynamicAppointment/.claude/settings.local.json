@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(./mvnw compile:*)"
+      "Bash(./mvnw compile:*)",
+      "Bash(timeout 30 ./mvnw spring-boot:run)"
     ]
   }
 }

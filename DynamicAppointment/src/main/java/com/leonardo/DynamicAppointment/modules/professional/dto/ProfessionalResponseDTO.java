@@ -5,6 +5,7 @@ import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceSumma
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,10 @@ public class ProfessionalResponseDTO {
     private ProfessionalStatus status;
 
     private Set<BusinessServiceSummaryDTO> services = new HashSet<>();
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     private LocalDateTime createdAt;
 
