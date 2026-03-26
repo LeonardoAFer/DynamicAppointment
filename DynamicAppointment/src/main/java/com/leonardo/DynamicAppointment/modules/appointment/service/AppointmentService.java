@@ -1,5 +1,6 @@
 package com.leonardo.DynamicAppointment.modules.appointment.service;
 
+import com.leonardo.DynamicAppointment.core.domain.Slot;
 import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentRequestDTO;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentResponseDTO;
@@ -7,56 +8,51 @@ import com.leonardo.DynamicAppointment.modules.appointment.entity.Appointment;
 import com.leonardo.DynamicAppointment.modules.appointment.exception.ResourceNotFoundException;
 import com.leonardo.DynamicAppointment.modules.appointment.repository.AppointmentRepository;
 import com.leonardo.DynamicAppointment.modules.appointment.status.AppointmentStatus;
-import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalRequestDTO;
-import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalResponseDTO;
 import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
-import com.leonardo.DynamicAppointment.modules.professional.repository.ProfessionalRepository;
-import com.leonardo.DynamicAppointment.modules.professional.status.ProfessionalStatus;
-import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceRequestDTO;
-import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
+import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
-import com.leonardo.DynamicAppointment.modules.services.repository.BusinessServiceRepository;
+import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-public class AppointmentService {
+public class AppointmentService implements IAppointmentService {
 
     private final AppointmentRepository appointmentRepository;
-    private final ProfessionalRepository professionalRepository;
-    private final BusinessServiceRepository businessServiceRepository;
+    private final IProfessionalService professionalService;
+    private final IBusinessServiceService businessServiceService;
     private final ModelMapper mapper;
 
-    AppointmentService(AppointmentRepository appointmentRepository, ModelMapper mapper, ProfessionalRepository professionalRepository, BusinessServiceRepository businessServiceRepository) {
+    AppointmentService(AppointmentRepository appointmentRepository, ModelMapper mapper, IProfessionalService professionalService, IBusinessServiceService businessServiceService) {
         this.appointmentRepository = appointmentRepository;
-        this.professionalRepository = professionalRepository;
-        this.businessServiceRepository = businessServiceRepository;
+        this.professionalService = professionalService;
+        this.businessServiceService = businessServiceService;
         this.mapper = mapper;
     }
 
+    @Override
     public AppointmentResponseDTO create(AppointmentRequestDTO request) {
         Appointment appointment = mapper.map(request, Appointment.class);
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setStatus(AppointmentStatus.CONFIRMED);
 
-        Professional professional = professionalRepository.findById(request.getProfessionalId())
-                .orElseThrow(() -> new ResourceNotFoundException("Professional not found"));
+        Professional professional = professionalService.findEntityById(request.getProfessionalId());
 
-        BusinessService service = businessServiceRepository.findById(request.getServiceId())
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+        BusinessService service = businessServiceService.findEntityById(request.getServiceId());
 
         appointment.setProfessional(professional);
         appointment.setService(service);
+        appointmentRepository.save(appointment);
 
         return mapper.map(appointment, AppointmentResponseDTO.class);
         //Por enquanto sem acess token
     }
 
+    @Override
     public AppointmentResponseDTO fetch(Long id){
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment not found for respective Id:" + id));
@@ -64,6 +60,23 @@ public class AppointmentService {
         return mapper.map(appointment, AppointmentResponseDTO.class);
     }
 
+    @Override
+    public List<Slot> fetchAppointmentByDate(Long professionalId, LocalDateTime startDate, LocalDateTime endDate){
+       List<Slot> slots = new ArrayList<>();
+       List<Appointment> appointments = appointmentRepository.fetchAppointmentByDate(professionalId, startDate, endDate);
+       if(appointments == null){
+           return null;
+       }
+       for(Appointment appointment : appointments){
+            Slot slot = new Slot();
+            slot.setStartTime(appointment.getScheduledAt().toLocalTime());
+            slot.setEndTime(appointment.getScheduledAt().plusMinutes(appointment.getService().getDurationMinutes()).toLocalTime());
+            slots.add(slot);
+       }
+        return slots;
+    }
+
+    @Override
     public AppointmentResponseDTO update(Long id, AppointmentRequestDTO request){
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Appointment not found for respective Id:" + id));
@@ -72,18 +85,17 @@ public class AppointmentService {
         UpdateHelper.updateIfPresent(request.getGuestName(), appointment::setGuestName);
         UpdateHelper.updateIfPresent(request.getGuestPhone(), appointment::setGuestPhone);
 
-        BusinessService service = businessServiceRepository.findById(request.getServiceId())
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found for respective Id:" + request.getServiceId()));
+        BusinessService service = businessServiceService.findEntityById(request.getServiceId());
         appointment.setService(service);
 
-        Professional professional = professionalRepository.findById(request.getProfessionalId())
-                .orElseThrow(() -> new ResourceNotFoundException("Professional not found for respective Id:" + request.getProfessionalId()));
+        Professional professional = professionalService.findEntityById(request.getProfessionalId());
         appointment.setProfessional(professional);
 
         appointmentRepository.save(appointment);
         return mapper.map(appointment, AppointmentResponseDTO.class);
     }
 
+    @Override
     public void delete(Long id) {
         if (!appointmentRepository.existsById(id)) {
             throw new RuntimeException("Appointment not found with id: " + id);
@@ -91,5 +103,3 @@ public class AppointmentService {
         appointmentRepository.deleteById(id);
     }
 }
-
-
