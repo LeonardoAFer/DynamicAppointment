@@ -2,7 +2,7 @@ package com.leonardo.DynamicAppointment.modules.professional.controller;
 
 import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalRequestDTO;
 import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalResponseDTO;
-import com.leonardo.DynamicAppointment.modules.professional.service.ProfessionalService;
+import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/professionals")
 public class ProfessionalController {
 
-    private final ProfessionalService professionalService;
+    private final IProfessionalService professionalService;
 
-    ProfessionalController(ProfessionalService professionalService) {
+    ProfessionalController(IProfessionalService professionalService) {
         this.professionalService = professionalService;
     }
 

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +35,10 @@ public class Professional {
             inverseJoinColumns = @JoinColumn(name = "service_id")
     )
     private Set<BusinessService> services = new HashSet<>();
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
     private LocalDateTime createdAt;
 
