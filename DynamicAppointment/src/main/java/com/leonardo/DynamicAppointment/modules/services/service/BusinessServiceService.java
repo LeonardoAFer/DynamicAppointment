@@ -1,10 +1,12 @@
 package com.leonardo.DynamicAppointment.modules.services.service;
 
+import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
 import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceRequestDTO;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.repository.BusinessServiceRepository;
+import org.hibernate.sql.Update;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -53,12 +55,12 @@ public class BusinessServiceService implements IBusinessServiceService {
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
 
         businessService.setUpdatedAt(LocalDateTime.now());
-        businessService.setCategory(request.getCategory());
-        businessService.setName(request.getName());
-        businessService.setDescription(request.getDescription());
-        businessService.setPrice(request.getPrice());
-        businessService.setCleanupMinutes(request.getCleanupMinutes());
-        businessService.setDurationMinutes(request.getDurationMinutes());
+        UpdateHelper.updateIfPresent(request.getCategory(), businessService::setCategory);
+        UpdateHelper.updateIfPresent(request.getName(), businessService::setName);
+        UpdateHelper.updateIfPresent(request.getDescription(), businessService::setDescription);
+        UpdateHelper.updateIfPresent(request.getPrice(), businessService::setPrice);
+        UpdateHelper.updateIfPresent(request.getCleanupMinutes(), businessService::setCleanupMinutes);
+        UpdateHelper.updateIfPresent(request.getDurationMinutes(), businessService::setDurationMinutes);
 
         businessServiceRepository.save(businessService);
 
