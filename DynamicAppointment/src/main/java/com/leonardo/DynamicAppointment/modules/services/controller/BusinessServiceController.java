@@ -2,7 +2,7 @@ package com.leonardo.DynamicAppointment.modules.services.controller;
 
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceRequestDTO;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
-import com.leonardo.DynamicAppointment.modules.services.service.BusinessServiceService;
+import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/services")
 public class BusinessServiceController {
 
-    private final BusinessServiceService businessServiceService;
+    private final IBusinessServiceService businessServiceService;
 
-    BusinessServiceController(BusinessServiceService businessServiceService) {
+    BusinessServiceController(IBusinessServiceService businessServiceService) {
         this.businessServiceService = businessServiceService;
     }
 
