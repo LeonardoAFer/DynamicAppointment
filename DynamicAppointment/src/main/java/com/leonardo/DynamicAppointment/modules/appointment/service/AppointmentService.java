@@ -2,6 +2,7 @@ package com.leonardo.DynamicAppointment.modules.appointment.service;
 
 import com.leonardo.DynamicAppointment.core.domain.Slot;
 import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
+import com.leonardo.DynamicAppointment.infrastructure.email.EmailService;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentRequestDTO;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentResponseDTO;
 import com.leonardo.DynamicAppointment.modules.appointment.entity.Appointment;
@@ -13,6 +14,7 @@ import com.leonardo.DynamicAppointment.modules.professional.service.IProfessiona
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
