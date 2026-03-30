@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Claude Code ###
+.claude/
+
+### Application Properties (contém credenciais) ###
+src/main/resources/application.properties
