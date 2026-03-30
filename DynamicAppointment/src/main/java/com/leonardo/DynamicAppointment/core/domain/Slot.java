@@ -1,4 +1,4 @@
-package com.leonardo.DynamicAppointment.modules.appointment.domain;
+package com.leonardo.DynamicAppointment.core.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
