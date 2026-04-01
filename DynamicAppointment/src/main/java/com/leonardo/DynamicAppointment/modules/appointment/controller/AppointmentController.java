@@ -27,7 +27,7 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<AppointmentResponseDTO> createAppointment(@RequestBody AppointmentRequestDTO request) {
-        return new ResponseEntity<>(appointmentService.create(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(schedulingOrchestrator.scheduleAppointment(request), HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
@@ -55,5 +55,19 @@ public class AppointmentController {
         appointmentService.delete(id);
     }
 
+    @GetMapping("/guest/{accessToken}")
+    public ResponseEntity<AppointmentResponseDTO> fetchByToken(@PathVariable String accessToken) {
+        return new ResponseEntity<>(appointmentService.fetchByToken(accessToken), HttpStatus.OK);
+    }
+
+    @PatchMapping("/guest/{accessToken}/cancel")
+    public ResponseEntity<AppointmentResponseDTO> cancelByToken(@PathVariable String accessToken) {
+        return new ResponseEntity<>(appointmentService.cancelByToken(accessToken), HttpStatus.OK);
+    }
+
+    @GetMapping("/guest/{accessToken}/cancel")
+    public ResponseEntity<AppointmentResponseDTO> cancelByTokenViaLink(@PathVariable String accessToken) {
+        return new ResponseEntity<>(appointmentService.cancelByToken(accessToken), HttpStatus.OK);
+    }
 
 }
