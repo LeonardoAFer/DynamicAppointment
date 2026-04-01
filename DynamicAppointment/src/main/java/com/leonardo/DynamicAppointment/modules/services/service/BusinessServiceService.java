@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BusinessServiceService implements IBusinessServiceService {
@@ -26,6 +27,13 @@ public class BusinessServiceService implements IBusinessServiceService {
         this.businessServiceRepository = businessServiceRepository;
         this.professionalService = professionalService;
         this.mapper = mapper;
+    }
+
+    @Override
+    public List<BusinessServiceResponseDTO> findAll() {
+        return businessServiceRepository.findAll().stream()
+                .map(s -> mapper.map(s, BusinessServiceResponseDTO.class))
+                .toList();
     }
 
     @Override
