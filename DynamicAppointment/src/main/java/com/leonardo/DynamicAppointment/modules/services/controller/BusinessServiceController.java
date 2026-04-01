@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/services")
 public class BusinessServiceController {
@@ -15,6 +17,11 @@ public class BusinessServiceController {
 
     BusinessServiceController(IBusinessServiceService businessServiceService) {
         this.businessServiceService = businessServiceService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BusinessServiceResponseDTO>> listServices() {
+        return new ResponseEntity<>(businessServiceService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping

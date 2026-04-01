@@ -4,7 +4,11 @@ import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceReque
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 
+import java.util.List;
+
 public interface IBusinessServiceService {
+
+    List<BusinessServiceResponseDTO> findAll();
 
     BusinessServiceResponseDTO create(BusinessServiceRequestDTO request);
 
