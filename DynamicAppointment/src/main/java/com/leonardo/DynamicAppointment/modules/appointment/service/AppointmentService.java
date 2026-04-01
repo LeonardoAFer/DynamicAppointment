@@ -2,7 +2,6 @@ package com.leonardo.DynamicAppointment.modules.appointment.service;
 
 import com.leonardo.DynamicAppointment.core.domain.Slot;
 import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
-import com.leonardo.DynamicAppointment.infrastructure.email.EmailService;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentRequestDTO;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentResponseDTO;
 import com.leonardo.DynamicAppointment.modules.appointment.entity.Appointment;
@@ -14,12 +13,12 @@ import com.leonardo.DynamicAppointment.modules.professional.service.IProfessiona
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AppointmentService implements IAppointmentService {
@@ -41,6 +40,7 @@ public class AppointmentService implements IAppointmentService {
         Appointment appointment = mapper.map(request, Appointment.class);
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setStatus(AppointmentStatus.CONFIRMED);
+        appointment.setAccessToken(UUID.randomUUID().toString());
 
         Professional professional = professionalService.findEntityById(request.getProfessionalId());
 
@@ -51,7 +51,6 @@ public class AppointmentService implements IAppointmentService {
         appointmentRepository.save(appointment);
 
         return mapper.map(appointment, AppointmentResponseDTO.class);
-        //Por enquanto sem acess token
     }
 
     @Override
@@ -72,7 +71,10 @@ public class AppointmentService implements IAppointmentService {
        for(Appointment appointment : appointments){
             Slot slot = new Slot();
             slot.setStartTime(appointment.getScheduledAt().toLocalTime());
-            slot.setEndTime(appointment.getScheduledAt().plusMinutes(appointment.getService().getDurationMinutes()).toLocalTime());
+            slot.setEndTime(appointment.getScheduledAt()
+                    .plusMinutes(appointment.getService().getDurationMinutes())
+                    .plusMinutes(appointment.getService().getCleanupMinutes())
+                    .toLocalTime());
             slots.add(slot);
        }
         return slots;
@@ -103,5 +105,25 @@ public class AppointmentService implements IAppointmentService {
             throw new RuntimeException("Appointment not found with id: " + id);
         }
         appointmentRepository.deleteById(id);
+    }
+
+    @Override
+    public AppointmentResponseDTO fetchByToken(String accessToken) {
+        Appointment appointment = appointmentRepository.findByAccessToken(accessToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found for the provided token"));
+
+        return mapper.map(appointment, AppointmentResponseDTO.class);
+    }
+
+    @Override
+    public AppointmentResponseDTO cancelByToken(String accessToken) {
+        Appointment appointment = appointmentRepository.findByAccessToken(accessToken)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found for the provided token"));
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        appointment.setUpdatedAt(LocalDateTime.now());
+        appointmentRepository.save(appointment);
+
+        return mapper.map(appointment, AppointmentResponseDTO.class);
     }
 }
