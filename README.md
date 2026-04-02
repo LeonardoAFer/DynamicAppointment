@@ -22,18 +22,7 @@ A arquitetura segue o modelo C4 com diagramas PlantUML disponíveis em `src/main
 
 Visão de alto nível do sistema e suas interações externas.
 
-```
-┌─────────┐       HTTPS        ┌──────────────────────────────┐       SMTP       ┌──────────────────┐
-│ Cliente  │ ◄───────────────► │  Sistema de Agendamento      │ ───────────────► │ Sistema de E-mail │
-│ (Pessoa) │                   │  Dinâmico                    │                  │ (Externo)         │
-└─────────┘                    │  Agendamento, disponibilidade│                  └────────┬─────────┘
-                               │  e gestão de horários        │                           │
-                               └──────────────────────────────┘                           │
-                                                                                 E-mail   │
-                               ┌─────────┐ ◄─────────────────────────────────────────────┘
-                               │ Cliente  │
-                               └─────────┘
-```
+<img width="466" height="893" alt="C4_Agendamento_C1-Sistema_de_Agendamento_Dinâmico__Diagrama_de_Contexto__C1_" src="https://github.com/user-attachments/assets/34c10384-e137-4b58-ab07-64e8238bfd23" />
 
 **Atores:** Cliente (realiza, consulta e cancela agendamentos)
 **Sistemas externos:** Sistema de E-mail (confirmações, lembretes, cancelamentos)
@@ -42,71 +31,13 @@ Visão de alto nível do sistema e suas interações externas.
 
 Decomposição do sistema em containers executáveis.
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                    Sistema de Agendamento Dinâmico                   │
-│                                                                      │
-│  ┌──────────────────┐    ┌──────────────────┐    ┌───────────────┐  │
-│  │  Interface        │    │  Web Application  │    │  API          │  │
-│  │  Gráfica (React)  │──►│  Java/Spring Boot │──►│  Application  │  │
-│  │                    │    │                    │    │  REST API     │  │
-│  └──────────────────┘    └──────────────────┘    └──────┬────────┘  │
-│                                                          │           │
-│                                                          ▼           │
-│                                                    ┌───────────────┐ │
-│                                                    │  PostgreSQL   │ │
-│                                                    │  Database     │ │
-│                                                    └───────────────┘ │
-└──────────────────────────────────────────────────────────────────────┘
-         │                                                    │
-         │                                                    ▼
-         │                                          ┌──────────────────┐
-         │                                          │ Sistema de E-mail│
-         │◄─────────────────────────────────────────│ (SMTP)           │
-         │              E-mail                      └──────────────────┘
-```
+<img width="706" height="1532" alt="C4_Agendamento_C2-Sistema_de_Agendamento_Dinâmico__Diagrama_de_Container__C2_" src="https://github.com/user-attachments/assets/eee7d7c4-82d5-489e-bf40-1f28f73dd857" />
 
 ### Nível 3 — Componentes (C3) — API Application
 
 Componentes internos da API e suas responsabilidades.
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              API Application                                │
-│                                                                             │
-│  ┌─────────────────────────┐                                                │
-│  │  SchedulingOrchestrator │──────────────────────────┐                     │
-│  │  (Orquestração)         │                          │                     │
-│  └────────┬────────────────┘                          │                     │
-│           │                                           ▼                     │
-│           ▼                                  ┌─────────────────┐            │
-│  ┌─────────────────────┐                     │  Auth / JWT     │            │
-│  │  Modules/Appointment │                    │  (Segurança)    │            │
-│  │  Controller, Service │                    └────────┬────────┘            │
-│  │  Repository          │                             │                     │
-│  └────────┬─────────────┘                             ▼                     │
-│           │                                  ┌─────────────────┐            │
-│           ▼                                  │  Notificação    │            │
-│  ┌────────────────────────┐                  │  E-mail/WhatsApp│            │
-│  │  AvailabilityEngine    │                  └─────────────────┘            │
-│  │  (Motor de             │                                                 │
-│  │   Disponibilidade)     │                                                 │
-│  └────┬──────────┬────────┘                                                 │
-│       │          │                                                          │
-│       ▼          ▼                                                          │
-│  ┌──────────┐ ┌────────────────┐                                            │
-│  │Modules/  │ │Modules/        │                                            │
-│  │Professio.│ │Services        │                                            │
-│  └──────────┘ └────────────────┘                                            │
-└─────────────────────────────────────────────────────────────────────────────┘
-          │              │              │
-          ▼              ▼              ▼
-    ┌──────────────────────────────────────┐
-    │           PostgreSQL Database         │
-    └──────────────────────────────────────┘
-```
-
----
+<img width="957" height="1460" alt="C4_Agendamento_C3-Sistema_de_Agendamento_Dinâmico__Diagrama_de_Componentes__C3___API_Application" src="https://github.com/user-attachments/assets/11fe4407-e952-4ae0-8966-d59407ac44f6" />
 
 ## Estrutura do Projeto
 
