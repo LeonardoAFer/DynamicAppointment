@@ -10,13 +10,17 @@ import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
 import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 //Orquestrador de agendamento (faz todo o fluxo de agendamento)
 @Component
@@ -91,57 +95,38 @@ public class SchedulingOrchestrator {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        String date = appointment.getScheduledAt().format(dateFormatter);
-        String time = appointment.getScheduledAt().format(timeFormatter);
-        String guestName = appointment.getGuestName();
-        String professionalName = appointment.getProfessional().getName();
-        String serviceName = appointment.getService().getName();
-        int duration = appointment.getService().getDurationMinutes();
         String cancelUrl = "http://localhost:8080/api/appointments/guest/" + appointment.getAccessToken() + "/cancel";
 
-        String html = """
-                <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                    <div style="background: linear-gradient(135deg, #1a1a2e 0%%, #16213e 100%%); padding: 40px 30px; text-align: center;">
-                        <h1 style="color: #e0c097; margin: 0; font-size: 28px; font-weight: 600; letter-spacing: 1px;">Agendamento Confirmado</h1>
-                        <p style="color: #a0a0b0; margin-top: 8px; font-size: 14px;">Seu horario foi reservado com sucesso</p>
-                    </div>
-                    <div style="padding: 30px;">
-                        <p style="color: #333; font-size: 16px; margin-bottom: 25px;">Ola, <strong>%s</strong>! Aqui estao os detalhes do seu agendamento:</p>
-                        <table style="width: 100%%; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #888; font-size: 14px;">Servico</td>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; font-weight: 600; text-align: right;">%s</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #888; font-size: 14px;">Profissional</td>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; font-weight: 600; text-align: right;">%s</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #888; font-size: 14px;">Data</td>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; font-weight: 600; text-align: right;">%s</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #888; font-size: 14px;">Horario</td>
-                                <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 14px; font-weight: 600; text-align: right;">%s</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 12px 0; color: #888; font-size: 14px;">Duracao</td>
-                                <td style="padding: 12px 0; color: #333; font-size: 14px; font-weight: 600; text-align: right;">%d min</td>
-                            </tr>
-                        </table>
-                        <div style="margin-top: 30px; text-align: center;">
-                            <a href="%s" style="display: inline-block; background-color: #dc3545; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">Cancelar Agendamento</a>
-                        </div>
-                        <p style="color: #aaa; font-size: 12px; text-align: center; margin-top: 25px;">Se voce nao solicitou este agendamento, ignore este e-mail.</p>
-                    </div>
-                </div>
-                """.formatted(guestName, serviceName, professionalName, date, time, duration, cancelUrl);
+        String html = loadTemplate("templates/appointment-confirmation.html", Map.of(
+                "guestName", appointment.getGuestName(),
+                "serviceName", appointment.getService().getName(),
+                "professionalName", appointment.getProfessional().getName(),
+                "date", appointment.getScheduledAt().format(dateFormatter),
+                "time", appointment.getScheduledAt().format(timeFormatter),
+                "duration", String.valueOf(appointment.getService().getDurationMinutes()),
+                "cancelUrl", cancelUrl
+        ));
 
         emailService.sendHtmlEmail(
                 appointment.getGuestEmail(),
-                "Agendamento Confirmado - " + serviceName,
+                "Agendamento Confirmado - " + appointment.getService().getName(),
                 html
         );
+    }
+
+    private String loadTemplate(String templatePath, Map<String, String> variables) {
+        try {
+            ClassPathResource resource = new ClassPathResource(templatePath);
+            String template = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
+            for (Map.Entry<String, String> entry : variables.entrySet()) {
+                template = template.replace("{{" + entry.getKey() + "}}", entry.getValue());
+            }
+
+            return template;
+        } catch (IOException e) {
+            throw new RuntimeException("Falha ao carregar template: " + templatePath, e);
+        }
     }
 
 }
