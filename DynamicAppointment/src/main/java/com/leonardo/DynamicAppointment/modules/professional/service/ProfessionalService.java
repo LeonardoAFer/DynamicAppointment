@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -28,6 +29,13 @@ public class ProfessionalService implements IProfessionalService {
         this.professionalRepository = professionalRepository;
         this.businessServiceService = businessServiceService;
         this.mapper = mapper;
+    }
+
+    @Override
+    public List<ProfessionalResponseDTO> fetchAll() {
+        return professionalRepository.findAll().stream()
+                .map(professional -> mapper.map(professional, ProfessionalResponseDTO.class))
+                .toList();
     }
 
     @Override

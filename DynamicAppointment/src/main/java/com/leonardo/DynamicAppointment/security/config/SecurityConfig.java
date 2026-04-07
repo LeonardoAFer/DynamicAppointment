@@ -18,9 +18,12 @@ public class SecurityConfig {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(customizer -> customizer.disable());
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/api/professionals/**", "/api/services/**", "/api/appointments/**").permitAll().anyRequest().authenticated());
+        httpSecurity.cors(Customizer.withDefaults());
+        httpSecurity.authorizeHttpRequests(request -> request
+                .requestMatchers("/api/professionals/**", "/api/services/**", "/api/appointments/**", "/error").permitAll()
+                .anyRequest().authenticated());
         httpSecurity.httpBasic(Customizer.withDefaults());
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();

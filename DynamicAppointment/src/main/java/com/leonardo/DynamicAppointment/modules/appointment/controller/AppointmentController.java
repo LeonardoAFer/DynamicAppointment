@@ -50,10 +50,20 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentService.update(id, request), HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public void deleteAppointment(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/guest/{token}")
+    public ResponseEntity<AppointmentResponseDTO> fetchByToken(@PathVariable String token) {
+        return new ResponseEntity<>(appointmentService.fetchByToken(token), HttpStatus.OK);
+    }
+
+    @GetMapping("/guest/{token}/cancel")
+    public ResponseEntity<AppointmentResponseDTO> cancelByToken(@PathVariable String token) {
+        return new ResponseEntity<>(appointmentService.cancelByToken(token), HttpStatus.OK);
+    }
 
 }

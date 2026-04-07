@@ -5,9 +5,12 @@ import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalResp
 import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 
+import java.util.List;
 import java.util.Set;
 
 public interface IProfessionalService {
+
+    List<ProfessionalResponseDTO> fetchAll();
 
     ProfessionalResponseDTO create(ProfessionalRequestDTO request);
 
