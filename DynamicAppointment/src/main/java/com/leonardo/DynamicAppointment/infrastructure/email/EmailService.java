@@ -18,7 +18,7 @@ public class EmailService {
 
     public void sendEmail(String toEmail, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("leoanardo14senai@gmail.com");
+        message.setFrom("leonardo14senai@gmail.com");
         message.setTo(toEmail);
         message.setText(body);
         message.setSubject(subject);
@@ -30,11 +30,10 @@ public class EmailService {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("leoanardo14senai@gmail.com");
+            helper.setFrom("leonardo14senai@gmail.com");
             helper.setTo(toEmail);
             helper.setSubject(subject);
             helper.setText(htmlBody, true);
-
             javaMailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("Falha ao enviar email HTML", e);

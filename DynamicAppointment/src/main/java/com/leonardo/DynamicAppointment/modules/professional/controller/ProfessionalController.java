@@ -20,8 +20,8 @@ public class ProfessionalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProfessionalResponseDTO>> fetchAllProfessionals() {
-        return new ResponseEntity<>(professionalService.fetchAll(), HttpStatus.OK);
+    public ResponseEntity<List<ProfessionalResponseDTO>> listProfessionals() {
+        return new ResponseEntity<>(professionalService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping

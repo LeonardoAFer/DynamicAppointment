@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IBusinessServiceService {
 
-    List<BusinessServiceResponseDTO> fetchAll();
+    List<BusinessServiceResponseDTO> findAll();
 
     BusinessServiceResponseDTO create(BusinessServiceRequestDTO request);
 

@@ -6,7 +6,6 @@ import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceReque
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
 import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.repository.BusinessServiceRepository;
-import org.hibernate.sql.Update;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -30,9 +29,9 @@ public class BusinessServiceService implements IBusinessServiceService {
     }
 
     @Override
-    public List<BusinessServiceResponseDTO> fetchAll() {
+    public List<BusinessServiceResponseDTO> findAll() {
         return businessServiceRepository.findAll().stream()
-                .map(service -> mapper.map(service, BusinessServiceResponseDTO.class))
+                .map(s -> mapper.map(s, BusinessServiceResponseDTO.class))
                 .toList();
     }
 

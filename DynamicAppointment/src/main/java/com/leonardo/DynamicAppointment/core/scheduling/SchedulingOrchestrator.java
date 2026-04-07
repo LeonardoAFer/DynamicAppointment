@@ -3,7 +3,13 @@ package com.leonardo.DynamicAppointment.core.scheduling;
 import com.leonardo.DynamicAppointment.core.availability.AvailabilityEngine;
 import com.leonardo.DynamicAppointment.core.domain.Slot;
 import com.leonardo.DynamicAppointment.infrastructure.email.EmailService;
+import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentRequestDTO;
 import com.leonardo.DynamicAppointment.modules.appointment.dto.AppointmentResponseDTO;
+import com.leonardo.DynamicAppointment.modules.appointment.service.IAppointmentService;
+import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
+import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
+import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
+import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +28,51 @@ public class SchedulingOrchestrator {
 
     private final AvailabilityEngine availabilityEngine;
     private final EmailService emailService;
+    private final IAppointmentService appointmentService;
+    private final IProfessionalService professionalService;
+    private final IBusinessServiceService businessServiceService;
 
-    SchedulingOrchestrator(AvailabilityEngine availabilityEngine, EmailService emailService) {
+    SchedulingOrchestrator(AvailabilityEngine availabilityEngine, EmailService emailService,
+                           IAppointmentService appointmentService, IProfessionalService professionalService,
+                           IBusinessServiceService businessServiceService) {
         this.availabilityEngine = availabilityEngine;
         this.emailService = emailService;
+        this.appointmentService = appointmentService;
+        this.professionalService = professionalService;
+        this.businessServiceService = businessServiceService;
+    }
+
+    public AppointmentResponseDTO scheduleAppointment(AppointmentRequestDTO request) {
+        Professional professional = professionalService.findEntityById(request.getProfessionalId());
+        BusinessService service = businessServiceService.findEntityById(request.getServiceId());
+
+        LocalTime requestedStart = request.getScheduledAt().toLocalTime();
+        LocalTime requestedEnd = requestedStart
+                .plusMinutes(service.getDurationMinutes())
+                .plusMinutes(service.getCleanupMinutes());
+
+        if (requestedStart.isBefore(professional.getStartTime()) || requestedEnd.isAfter(professional.getEndTime())) {
+            throw new IllegalStateException("O horario solicitado esta fora do expediente do profissional ("
+                    + professional.getStartTime() + " - " + professional.getEndTime() + ")");
+        }
+
+        LocalDate date = request.getScheduledAt().toLocalDate();
+        List<Slot> scheduledSlots = availabilityEngine.fetchScheduledSlots(
+                request.getProfessionalId(), date.atStartOfDay(), date.atTime(LocalTime.MAX));
+
+        boolean hasConflict = scheduledSlots.stream()
+                .anyMatch(scheduled -> requestedStart.isBefore(scheduled.getEndTime())
+                        && requestedEnd.isAfter(scheduled.getStartTime()));
+
+        if (hasConflict) {
+            throw new IllegalStateException("O horario solicitado conflita com um agendamento existente");
+        }
+
+        AppointmentResponseDTO response = appointmentService.create(request);
+
+        sendConfirmationEmail(response);
+
+        return response;
     }
 
     public List<Slot> availableSlots(LocalDate date, Long professionalId, Long serviceId) {

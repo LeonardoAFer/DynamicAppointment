@@ -20,8 +20,8 @@ public class BusinessServiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BusinessServiceResponseDTO>> fetchAllServices() {
-        return new ResponseEntity<>(businessServiceService.fetchAll(), HttpStatus.OK);
+    public ResponseEntity<List<BusinessServiceResponseDTO>> listServices() {
+        return new ResponseEntity<>(businessServiceService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping
