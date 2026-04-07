@@ -24,7 +24,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(request -> request
                 .requestMatchers("/api/professionals/**", "/api/services/**", "/api/appointments/**", "/error").permitAll()
                 .anyRequest().authenticated());
-        httpSecurity.httpBasic(Customizer.withDefaults());
+        httpSecurity.httpBasic(basic -> basic.authenticationEntryPoint((req, res, authException) -> res.sendError(401)));
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();
     }

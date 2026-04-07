@@ -32,9 +32,9 @@ public class ProfessionalService implements IProfessionalService {
     }
 
     @Override
-    public List<ProfessionalResponseDTO> fetchAll() {
+    public List<ProfessionalResponseDTO> findAll() {
         return professionalRepository.findAll().stream()
-                .map(professional -> mapper.map(professional, ProfessionalResponseDTO.class))
+                .map(p -> mapper.map(p, ProfessionalResponseDTO.class))
                 .toList();
     }
 

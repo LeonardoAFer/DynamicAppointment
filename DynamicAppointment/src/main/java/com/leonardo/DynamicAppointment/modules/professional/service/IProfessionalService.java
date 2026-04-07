@@ -10,7 +10,7 @@ import java.util.Set;
 
 public interface IProfessionalService {
 
-    List<ProfessionalResponseDTO> fetchAll();
+    List<ProfessionalResponseDTO> findAll();
 
     ProfessionalResponseDTO create(ProfessionalRequestDTO request);
 

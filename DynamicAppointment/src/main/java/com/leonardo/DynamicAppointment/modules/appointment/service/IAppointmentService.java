@@ -19,8 +19,8 @@ public interface IAppointmentService {
 
     void delete(Long id);
 
-    AppointmentResponseDTO fetchByToken(String token);
+    AppointmentResponseDTO fetchByToken(String accessToken);
 
-    AppointmentResponseDTO cancelByToken(String token);
+    AppointmentResponseDTO cancelByToken(String accessToken);
 
 }
