@@ -1,0 +1,39 @@
+<div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f5f9ff; padding: 32px 16px;">
+    <div style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(30,136,229,0.08);">
+        <div style="background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%); padding: 40px 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">Agendamento Confirmado</h1>
+            <p style="color: rgba(255,255,255,0.7); margin-top: 8px; font-size: 14px; font-weight: 400;">Seu horario foi reservado com sucesso</p>
+        </div>
+        <div style="padding: 32px;">
+            <p style="color: #1e88e5; font-size: 16px; margin-bottom: 28px;">Ola, <strong>{{guestName}}</strong>! Aqui estao os detalhes do seu agendamento:</p>
+            <div style="background-color: #f5f9ff; border-radius: 12px; padding: 20px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #888; font-size: 14px;">Servico</td>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #333; font-size: 14px; font-weight: 600; text-align: right;">{{serviceName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #888; font-size: 14px;">Profissional</td>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #333; font-size: 14px; font-weight: 600; text-align: right;">{{professionalName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #888; font-size: 14px;">Data</td>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #333; font-size: 14px; font-weight: 600; text-align: right;">{{date}}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #888; font-size: 14px;">Horario</td>
+                        <td style="padding: 12px 0; border-bottom: 1px solid #e3f2fd; color: #333; font-size: 14px; font-weight: 600; text-align: right;">{{time}}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; color: #888; font-size: 14px;">Duracao</td>
+                        <td style="padding: 12px 0; color: #333; font-size: 14px; font-weight: 600; text-align: right;">{{duration}} min</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="margin-top: 28px; text-align: center;">
+                <a href="{{cancelUrl}}" style="display: inline-block; background-color: #1e88e5; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">Cancelar Agendamento</a>
+            </div>
+            <p style="color: #aaa; font-size: 12px; text-align: center; margin-top: 24px;">Se voce nao solicitou este agendamento, ignore este e-mail.</p>
+        </div>
+    </div>
+</div>
