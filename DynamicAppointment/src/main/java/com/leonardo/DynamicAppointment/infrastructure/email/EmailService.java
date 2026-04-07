@@ -36,7 +36,7 @@ public class EmailService {
             helper.setText(htmlBody, true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException("Failed to send HTML email", e);
+            throw new RuntimeException("Falha ao enviar email HTML", e);
         }
     }
 

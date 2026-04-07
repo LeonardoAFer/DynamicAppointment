@@ -50,9 +50,10 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentService.update(id, request), HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public void deleteAppointment(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/guest/{accessToken}")

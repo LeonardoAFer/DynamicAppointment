@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(./mvnw compile:*)",
-      "Bash(timeout 30 ./mvnw spring-boot:run)"
+      "Bash(timeout 30 ./mvnw spring-boot:run)",
+      "Bash(xargs grep:*)",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
