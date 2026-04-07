@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/professionals")
 public class ProfessionalController {
@@ -15,6 +17,11 @@ public class ProfessionalController {
 
     ProfessionalController(IProfessionalService professionalService) {
         this.professionalService = professionalService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProfessionalResponseDTO>> fetchAllProfessionals() {
+        return new ResponseEntity<>(professionalService.fetchAll(), HttpStatus.OK);
     }
 
     @PostMapping
