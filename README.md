@@ -204,11 +204,3 @@ src/main/java/com/leonardo/DynamicAppointment/
 Os diagramas PlantUML estão em `src/main/resources/C4 Model/` e podem ser renderizados com qualquer visualizador PlantUML compatível.
 
 ---
-
-## Roadmap
-
-- [ ] Implementar autenticação JWT completa
-- [ ] Integração WhatsApp (Twilio ou similar)
-- [ ] Frontend React (calendário, seleção de serviços, fluxo de agendamento)
-- [ ] Validação de DTOs com Bean Validation
-- [ ] Testes unitários e de integração
