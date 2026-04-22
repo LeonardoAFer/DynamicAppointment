@@ -62,3 +62,32 @@ export interface AppointmentResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ProfessionalRequest {
+  name: string;
+  email: string;
+  status: string;
+  startTime: string;
+  endTime: string;
+  serviceIds: number[];
+}
+
+export interface BusinessServiceRequest {
+  name: string;
+  description: string;
+  category: string;
+  durationMinutes: number;
+  cleanupMinutes: number;
+  price: number;
+  status: string;
+  professionalIds: number[];
+}
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  token: string;
+}
