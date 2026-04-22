@@ -6,7 +6,20 @@
       "Bash(xargs grep:*)",
       "Bash(tree:*)",
       "Bash(find:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(where python *)",
+      "Bash(where python3 *)",
+      "Bash(pip show *)",
+      "Bash(pip install *)",
+      "Bash(curl -L -o \"C:/dev/BarberAppointment/DynamicAppointment/C4 Model/plantuml.jar\" \"https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar\")",
+      "Bash(pip list *)",
+      "Bash(ls *)",
+      "Bash(npm run *)",
+      "Bash(npx vite *)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/react-router-dom/package.json'\\); console.log\\(pkg.version\\);\")",
+      "Bash(node -e \"const rrd = require\\('react-router-dom'\\); console.log\\(Object.keys\\(rrd\\).filter\\(k => k.includes\\('Browser'\\) || k.includes\\('Route'\\) || k.includes\\('Outlet'\\)\\).join\\(', '\\)\\);\")",
+      "Bash(curl -s http://localhost:5173/admin/login)",
+      "Bash(node -e ' *)"
     ]
   }
 }

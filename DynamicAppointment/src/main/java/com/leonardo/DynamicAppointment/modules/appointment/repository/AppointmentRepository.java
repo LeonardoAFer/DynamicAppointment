@@ -22,4 +22,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Optional<Appointment> findByAccessToken(String accessToken);
 
+    boolean existsByProfessionalId(Long professionalId);
+
+    boolean existsByServiceId(Long serviceId);
+
 }
