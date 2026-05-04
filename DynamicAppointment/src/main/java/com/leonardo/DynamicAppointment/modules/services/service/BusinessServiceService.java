@@ -1,6 +1,7 @@
 package com.leonardo.DynamicAppointment.modules.services.service;
 
 import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
+import com.leonardo.DynamicAppointment.modules.appointment.repository.AppointmentRepository;
 import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceRequestDTO;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
@@ -18,13 +19,16 @@ public class BusinessServiceService implements IBusinessServiceService {
 
     private final BusinessServiceRepository businessServiceRepository;
     private final IProfessionalService professionalService;
+    private final AppointmentRepository appointmentRepository;
     private final ModelMapper mapper;
 
     BusinessServiceService(BusinessServiceRepository businessServiceRepository,
                            @Lazy IProfessionalService professionalService,
+                           AppointmentRepository appointmentRepository,
                            ModelMapper mapper) {
         this.businessServiceRepository = businessServiceRepository;
         this.professionalService = professionalService;
+        this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
     }
 
@@ -81,10 +85,15 @@ public class BusinessServiceService implements IBusinessServiceService {
 
     @Override
     public void delete(Long id) {
-        if (!businessServiceRepository.existsById(id)) {
-            throw new RuntimeException("Service not found with id: " + id);
+        BusinessService service = businessServiceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servico nao encontrado."));
+
+        if (appointmentRepository.existsByServiceId(id)) {
+            throw new IllegalStateException("Nao e possivel excluir este servico pois existem agendamentos vinculados.");
         }
-        businessServiceRepository.deleteById(id);
+
+        professionalService.dissociateServiceFromAll(service);
+        businessServiceRepository.delete(service);
     }
 
     @Override

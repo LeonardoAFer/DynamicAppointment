@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   User,
   Briefcase,
@@ -10,6 +11,7 @@ import {
   Clock,
   Loader2,
   CalendarCheck,
+  Shield,
 } from 'lucide-react';
 import { getProfessionals, getAvailableSlots, createAppointment } from '../services/api';
 import type { Professional, ServiceSummary } from '../types';
@@ -92,6 +94,17 @@ export default function Booking() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
+      {/* Admin link */}
+      <div className="flex justify-end mb-4">
+        <Link
+          to="/admin/login"
+          className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors no-underline"
+        >
+          <Shield className="w-3.5 h-3.5" />
+          Painel Admin
+        </Link>
+      </div>
+
       {/* Header */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-4">
