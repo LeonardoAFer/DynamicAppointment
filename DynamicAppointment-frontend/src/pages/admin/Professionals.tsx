@@ -227,9 +227,9 @@ export default function Professionals() {
 
       {deleteTarget && (
         <ConfirmDialog
-          title="Excluir profissional"
-          message={`Tem certeza que deseja excluir "${deleteTarget.name}"? Esta acao nao pode ser desfeita.`}
-          confirmLabel="Excluir"
+          title={`Excluir ${deleteTarget.name}?`}
+          message={'Todos os agendamentos vinculados a este profissional tambem serao excluidos. Esta acao nao pode ser desfeita.'}
+          confirmLabel="Sim, excluir"
           loading={deleting}
           onConfirm={handleDelete}
           onCancel={() => setDeleteTarget(null)}

@@ -11,6 +11,7 @@ import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -90,13 +91,12 @@ public class ProfessionalService implements IProfessionalService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Professional professional = professionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional nao encontrado."));
 
-        if (appointmentRepository.existsByProfessionalId(id)) {
-            throw new IllegalStateException("Nao e possivel excluir este profissional pois existem agendamentos vinculados.");
-        }
+        appointmentRepository.deleteAllByProfessionalId(id);
 
         professional.getServices().clear();
         professionalRepository.save(professional);
