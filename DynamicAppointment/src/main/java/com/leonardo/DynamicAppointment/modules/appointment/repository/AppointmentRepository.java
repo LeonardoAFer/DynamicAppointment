@@ -2,6 +2,7 @@ package com.leonardo.DynamicAppointment.modules.appointment.repository;
 
 import com.leonardo.DynamicAppointment.modules.appointment.entity.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,5 +26,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     boolean existsByProfessionalId(Long professionalId);
 
     boolean existsByServiceId(Long serviceId);
+
+    @Modifying
+    @Query("DELETE FROM Appointment a WHERE a.professional.id = :professionalId")
+    void deleteAllByProfessionalId(@Param("professionalId") Long professionalId);
 
 }
