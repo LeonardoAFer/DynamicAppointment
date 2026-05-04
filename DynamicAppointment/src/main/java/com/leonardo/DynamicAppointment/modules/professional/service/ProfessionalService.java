@@ -1,6 +1,7 @@
 package com.leonardo.DynamicAppointment.modules.professional.service;
 
 import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
+import com.leonardo.DynamicAppointment.modules.appointment.repository.AppointmentRepository;
 import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalRequestDTO;
 import com.leonardo.DynamicAppointment.modules.professional.dto.ProfessionalResponseDTO;
 import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
@@ -10,6 +11,7 @@ import com.leonardo.DynamicAppointment.modules.services.entity.BusinessService;
 import com.leonardo.DynamicAppointment.modules.services.service.IBusinessServiceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -21,13 +23,16 @@ public class ProfessionalService implements IProfessionalService {
 
     private final ProfessionalRepository professionalRepository;
     private final IBusinessServiceService businessServiceService;
+    private final AppointmentRepository appointmentRepository;
     private final ModelMapper mapper;
 
     ProfessionalService(ProfessionalRepository professionalRepository,
                         IBusinessServiceService businessServiceService,
+                        AppointmentRepository appointmentRepository,
                         ModelMapper mapper) {
         this.professionalRepository = professionalRepository;
         this.businessServiceService = businessServiceService;
+        this.appointmentRepository = appointmentRepository;
         this.mapper = mapper;
     }
 
@@ -86,11 +91,16 @@ public class ProfessionalService implements IProfessionalService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        if (!professionalRepository.existsById(id)) {
-            throw new RuntimeException("Professional not found with id: " + id);
-        }
-        professionalRepository.deleteById(id);
+        Professional professional = professionalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profissional nao encontrado."));
+
+        appointmentRepository.deleteAllByProfessionalId(id);
+
+        professional.getServices().clear();
+        professionalRepository.save(professional);
+        professionalRepository.delete(professional);
     }
 
     @Override
