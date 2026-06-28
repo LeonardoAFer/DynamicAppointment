@@ -52,7 +52,7 @@ export async function getAvailableSlots(
   serviceId: number
 ): Promise<Slot[]> {
   const { data } = await api.get<Slot[]>('/appointments/availability', {
-    params: { date, profesionalId: professionalId, serviceId },
+    params: { date, professionalId, serviceId },
   });
   return data;
 }
@@ -125,8 +125,8 @@ export async function getAppointments(
   professionalId: number,
   startDate: string,
   endDate: string
-): Promise<Slot[]> {
-  const { data } = await api.get<Slot[]>('/appointments/scheduled', {
+): Promise<AppointmentResponse[]> {
+  const { data } = await api.get<AppointmentResponse[]>('/appointments/scheduled', {
     params: { professionalId, startDate, endDate },
   });
   return data;

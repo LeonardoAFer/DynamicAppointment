@@ -36,13 +36,22 @@ public class AppointmentController {
     }
 
     @GetMapping("/availability")
-    public ResponseEntity<List<Slot>> getAvailability(@RequestParam LocalDate date, @RequestParam int serviceId, @RequestParam int profesionalId) {
-        return new ResponseEntity<>(schedulingOrchestrator.availableSlots(date, (long) profesionalId, (long) serviceId), HttpStatus.OK);
+    public ResponseEntity<List<Slot>> getAvailability(@RequestParam LocalDate date,
+                                                      @RequestParam Long serviceId,
+                                                      @RequestParam(name = "professionalId", required = false) Long professionalId,
+                                                      @RequestParam(name = "profesionalId", required = false) Long profesionalIdLegacy) {
+        Long resolvedProfessionalId = professionalId != null ? professionalId : profesionalIdLegacy;
+        if (resolvedProfessionalId == null) {
+            throw new IllegalArgumentException("professionalId is required");
+        }
+        return new ResponseEntity<>(schedulingOrchestrator.availableSlots(date, resolvedProfessionalId, serviceId), HttpStatus.OK);
     }
 
     @GetMapping("/scheduled")
-    public ResponseEntity<List<Slot>> fetchAppointmentsByDate(@RequestParam Long professionalId, @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate){
-        return new ResponseEntity<>(appointmentService.fetchAppointmentByDate(professionalId, startDate, endDate), HttpStatus.OK);
+    public ResponseEntity<List<AppointmentResponseDTO>> fetchAppointmentsByDate(@RequestParam Long professionalId,
+                                                                                 @RequestParam LocalDateTime startDate,
+                                                                                 @RequestParam LocalDateTime endDate){
+        return new ResponseEntity<>(appointmentService.listAppointmentsByDate(professionalId, startDate, endDate), HttpStatus.OK);
     }
 
     @PutMapping("{id}")

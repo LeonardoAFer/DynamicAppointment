@@ -9,9 +9,10 @@ import type { BusinessService, Professional, BusinessServiceRequest } from '../.
 import { useToast } from '../../components/Toast';
 import ConfirmDialog from '../../components/ConfirmDialog';
 
-const CATEGORIES = ['HAIR', 'BEARD', 'COMBO', 'GROOMING', 'BATH'] as const;
+const CATEGORIES = ['HAIR', 'BEARD', 'COMBO', 'GROOMING', 'BATH', 'CONSULTATION', 'OTHER'] as const;
 const CATEGORY_LABELS: Record<string, string> = {
-  HAIR: 'Cabelo', BEARD: 'Barba', COMBO: 'Combo', GROOMING: 'Cuidados', BATH: 'Banho',
+  HAIR: 'Cabelo', BEARD: 'Barba', COMBO: 'Combo', GROOMING: 'Cuidados',
+  BATH: 'Banho', CONSULTATION: 'Consulta', OTHER: 'Outro',
 };
 const SERVICE_STATUSES = ['ACTIVE', 'INACTIVE'] as const;
 const STATUS_LABELS: Record<string, string> = { ACTIVE: 'Ativo', INACTIVE: 'Inativo' };

@@ -66,7 +66,7 @@ public class AppointmentService implements IAppointmentService {
        List<Slot> slots = new ArrayList<>();
        List<Appointment> appointments = appointmentRepository.fetchAppointmentByDate(professionalId, startDate, endDate);
        if(appointments == null){
-           return null;
+           return slots;
        }
        for(Appointment appointment : appointments){
             Slot slot = new Slot();
@@ -78,6 +78,17 @@ public class AppointmentService implements IAppointmentService {
             slots.add(slot);
        }
         return slots;
+    }
+
+    @Override
+    public List<AppointmentResponseDTO> listAppointmentsByDate(Long professionalId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<Appointment> appointments = appointmentRepository.findByProfessionalAndDateRange(professionalId, startDate, endDate);
+        if (appointments == null) {
+            return new ArrayList<>();
+        }
+        return appointments.stream()
+                .map(a -> mapper.map(a, AppointmentResponseDTO.class))
+                .toList();
     }
 
     @Override

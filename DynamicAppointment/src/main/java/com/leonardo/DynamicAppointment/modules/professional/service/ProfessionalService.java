@@ -69,6 +69,7 @@ public class ProfessionalService implements IProfessionalService {
     }
 
     @Override
+    @Transactional
     public ProfessionalResponseDTO update(Long id, ProfessionalRequestDTO request) {
         Professional professional = professionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professional not found with id: " + id));
@@ -76,6 +77,8 @@ public class ProfessionalService implements IProfessionalService {
         UpdateHelper.updateIfPresent(request.getName(), professional::setName);
         UpdateHelper.updateIfPresent(request.getStatus(), professional::setStatus);
         UpdateHelper.updateIfPresent(request.getEmail(), professional::setEmail);
+        UpdateHelper.updateIfPresent(request.getStartTime(), professional::setStartTime);
+        UpdateHelper.updateIfPresent(request.getEndTime(), professional::setEndTime);
         professional.setUpdatedAt(LocalDateTime.now());
 
         UpdateHelper.updateIfPresent(request.getServiceIds(), ids -> {
@@ -83,7 +86,8 @@ public class ProfessionalService implements IProfessionalService {
             for (Long serviceId : ids) {
                 services.add(businessServiceService.findEntityById(serviceId));
             }
-            professional.setServices(services);
+            professional.getServices().clear();
+            professional.getServices().addAll(services);
         });
 
         professionalRepository.save(professional);

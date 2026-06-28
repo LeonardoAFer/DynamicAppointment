@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import {
-  Loader2, CalendarDays, Trash2, X, User, Briefcase, Calendar, Mail, Phone,
+  Loader2, CalendarDays, Trash2, X, User, Briefcase, Calendar, Mail, Phone, Eye,
 } from 'lucide-react';
 import { getProfessionals, getAppointments, deleteAppointment } from '../../services/api';
-import type { Professional, AppointmentResponse, Slot } from '../../types';
+import type { Professional, AppointmentResponse } from '../../types';
 import { useToast } from '../../components/Toast';
 import ConfirmDialog from '../../components/ConfirmDialog';
 
@@ -17,6 +17,13 @@ const STATUS_COLORS: Record<string, string> = {
   COMPLETED: 'bg-blue-50 text-blue-700',
 };
 
+function formatDateTime(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleString('pt-BR', {
+    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+}
+
 export default function Appointments() {
   const { toast } = useToast();
   const [professionals, setProfessionals] = useState<Professional[]>([]);
@@ -27,11 +34,11 @@ export default function Appointments() {
     const end = new Date(today.getTime() + 30 * 86400000).toISOString().slice(0, 10);
     return { start, end };
   });
-  const [slots, setSlots] = useState<Slot[]>([]);
+  const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [loadingAppointments, setLoadingAppointments] = useState(false);
   const [viewAppointment, setViewAppointment] = useState<AppointmentResponse | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AppointmentResponse | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -44,25 +51,42 @@ export default function Appointments() {
   }, []);
 
   useEffect(() => {
-    if (!selectedProfId) return;
-    setLoadingSlots(true);
-    getAppointments(selectedProfId, `${dateRange.start}T00:00:00`, `${dateRange.end}T23:59:59`)
-      .then(setSlots)
-      .finally(() => setLoadingSlots(false));
+    if (!selectedProfId) {
+      setAppointments([]);
+      return;
+    }
+    loadAppointments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProfId, dateRange]);
 
+  async function loadAppointments() {
+    if (!selectedProfId) return;
+    setLoadingAppointments(true);
+    try {
+      const data = await getAppointments(
+        selectedProfId,
+        `${dateRange.start}T00:00:00`,
+        `${dateRange.end}T23:59:59`,
+      );
+      setAppointments(data);
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast('error', msg || 'Erro ao buscar agendamentos.');
+      setAppointments([]);
+    } finally {
+      setLoadingAppointments(false);
+    }
+  }
+
   async function handleDelete() {
-    if (deleteTarget === null) return;
+    if (!deleteTarget) return;
     setDeleting(true);
     try {
-      await deleteAppointment(deleteTarget);
+      await deleteAppointment(deleteTarget.id);
       toast('success', 'Agendamento excluido com sucesso!');
       setDeleteTarget(null);
       setViewAppointment(null);
-      if (selectedProfId) {
-        const updated = await getAppointments(selectedProfId, `${dateRange.start}T00:00:00`, `${dateRange.end}T23:59:59`);
-        setSlots(updated);
-      }
+      await loadAppointments();
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
       toast('error', msg || 'Erro ao excluir agendamento.');
@@ -109,11 +133,11 @@ export default function Appointments() {
         </div>
       </div>
 
-      {loadingSlots ? (
+      {loadingAppointments ? (
         <div className="flex items-center justify-center py-20 text-gray-400">
           <Loader2 className="w-6 h-6 animate-spin mr-2" /> Buscando agendamentos...
         </div>
-      ) : slots.length === 0 ? (
+      ) : appointments.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
           <CalendarDays className="w-10 h-10 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500 text-sm">Nenhum agendamento encontrado neste periodo.</p>
@@ -124,15 +148,38 @@ export default function Appointments() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Horario</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Fim</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Data/Hora</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Cliente</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Servico</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="text-right px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Acoes</th>
                 </tr>
               </thead>
               <tbody>
-                {slots.map((slot, i) => (
-                  <tr key={i} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 text-gray-900 font-medium">{slot.startTime}</td>
-                    <td className="px-6 py-4 text-gray-600">{slot.endTime}</td>
+                {appointments.map((a) => (
+                  <tr key={a.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4 text-gray-900 font-medium">{formatDateTime(a.scheduledAt)}</td>
+                    <td className="px-6 py-4 text-gray-700">{a.guestName}</td>
+                    <td className="px-6 py-4 text-gray-600 hidden md:table-cell">{a.service?.name}</td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[a.status] || 'bg-gray-100 text-gray-500'}`}>
+                        {STATUS_LABELS[a.status] || a.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="inline-flex gap-1">
+                        <button onClick={() => setViewAppointment(a)}
+                          className="p-2 rounded-lg hover:bg-primary/10 text-gray-400 hover:text-primary transition-colors cursor-pointer"
+                          title="Detalhes">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => setDeleteTarget(a)}
+                          className="p-2 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                          title="Excluir">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -141,10 +188,10 @@ export default function Appointments() {
         </div>
       )}
 
-      {deleteTarget !== null && (
+      {deleteTarget && (
         <ConfirmDialog
           title="Excluir agendamento"
-          message="Tem certeza que deseja excluir este agendamento? Esta acao nao pode ser desfeita."
+          message={`Tem certeza que deseja excluir o agendamento de ${deleteTarget.guestName}? Esta acao nao pode ser desfeita.`}
           confirmLabel="Excluir"
           loading={deleting}
           onConfirm={handleDelete}
@@ -169,11 +216,11 @@ export default function Appointments() {
               <DetailRow icon={<User className="w-4 h-4 text-primary" />} label="Cliente" value={viewAppointment.guestName} />
               <DetailRow icon={<Mail className="w-4 h-4 text-primary" />} label="Email" value={viewAppointment.guestEmail} />
               <DetailRow icon={<Phone className="w-4 h-4 text-primary" />} label="Telefone" value={viewAppointment.guestPhone} />
-              <DetailRow icon={<Briefcase className="w-4 h-4 text-primary" />} label="Servico" value={viewAppointment.service.name} />
-              <DetailRow icon={<Calendar className="w-4 h-4 text-primary" />} label="Data/Hora" value={new Date(viewAppointment.scheduledAt).toLocaleString('pt-BR')} />
+              <DetailRow icon={<Briefcase className="w-4 h-4 text-primary" />} label="Servico" value={viewAppointment.service?.name ?? '-'} />
+              <DetailRow icon={<Calendar className="w-4 h-4 text-primary" />} label="Data/Hora" value={formatDateTime(viewAppointment.scheduledAt)} />
             </div>
             <div className="flex gap-3 pt-4 border-t border-gray-100">
-              <button onClick={() => { setDeleteTarget(viewAppointment.id); }}
+              <button onClick={() => setDeleteTarget(viewAppointment)}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer">
                 <Trash2 className="w-4 h-4" /> Excluir
               </button>

@@ -15,6 +15,8 @@ public interface IAppointmentService {
 
     List<Slot> fetchAppointmentByDate(Long professionalId, LocalDateTime startDate, LocalDateTime endDate);
 
+    List<AppointmentResponseDTO> listAppointmentsByDate(Long professionalId, LocalDateTime startDate, LocalDateTime endDate);
+
     AppointmentResponseDTO update(Long id, AppointmentRequestDTO request);
 
     void delete(Long id);

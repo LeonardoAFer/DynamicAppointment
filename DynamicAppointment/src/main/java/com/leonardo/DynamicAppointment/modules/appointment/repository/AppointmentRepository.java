@@ -21,6 +21,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             @Param("endDate") LocalDateTime endDate
     );
 
+    @Query("SELECT a FROM Appointment a WHERE a.professional.id = :professionalId AND a.scheduledAt BETWEEN :startDate AND :endDate ORDER BY a.scheduledAt ASC")
+    List<Appointment> findByProfessionalAndDateRange(
+            @Param("professionalId") Long professionalId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
     Optional<Appointment> findByAccessToken(String accessToken);
 
     boolean existsByProfessionalId(Long professionalId);

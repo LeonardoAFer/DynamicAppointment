@@ -10,6 +10,7 @@ import com.leonardo.DynamicAppointment.modules.services.repository.BusinessServi
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,6 +62,7 @@ public class BusinessServiceService implements IBusinessServiceService {
     }
 
     @Override
+    @Transactional
     public BusinessServiceResponseDTO update(Long id, BusinessServiceRequestDTO request) {
         BusinessService businessService = businessServiceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
@@ -72,12 +74,15 @@ public class BusinessServiceService implements IBusinessServiceService {
         UpdateHelper.updateIfPresent(request.getPrice(), businessService::setPrice);
         UpdateHelper.updateIfPresent(request.getCleanupMinutes(), businessService::setCleanupMinutes);
         UpdateHelper.updateIfPresent(request.getDurationMinutes(), businessService::setDurationMinutes);
+        UpdateHelper.updateIfPresent(request.getStatus(), businessService::setStatus);
 
         businessServiceRepository.save(businessService);
 
         if (request.getProfessionalIds() != null) {
             professionalService.dissociateServiceFromAll(businessService);
-            professionalService.associateService(request.getProfessionalIds(), businessService);
+            if (!request.getProfessionalIds().isEmpty()) {
+                professionalService.associateService(request.getProfessionalIds(), businessService);
+            }
         }
 
         return mapper.map(businessService, BusinessServiceResponseDTO.class);
