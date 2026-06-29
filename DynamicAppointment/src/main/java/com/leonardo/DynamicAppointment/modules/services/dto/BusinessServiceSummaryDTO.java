@@ -1,6 +1,6 @@
 package com.leonardo.DynamicAppointment.modules.services.dto;
 
-import com.leonardo.DynamicAppointment.modules.services.category.ServiceCategory;
+import com.leonardo.DynamicAppointment.modules.category.dto.CategorySummaryDTO;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class BusinessServiceSummaryDTO {
     private Long id;
     private String name;
-    private ServiceCategory category;
+    private CategorySummaryDTO category;
     private BigDecimal price;
     private Integer durationMinutes;
 }

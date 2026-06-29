@@ -94,7 +94,7 @@ public class ProfessionalService implements IProfessionalService {
     @Transactional
     public void delete(Long id) {
         Professional professional = professionalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profissional nao encontrado."));
+                .orElseThrow(() -> new RuntimeException("Profissional não encontrado."));
 
         appointmentRepository.deleteAllByProfessionalId(id);
 

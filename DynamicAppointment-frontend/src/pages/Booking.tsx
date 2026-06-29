@@ -19,15 +19,15 @@ import type { Professional, ServiceSummary } from '../types';
 type Step = 'professional' | 'service' | 'datetime' | 'info';
 
 const STEPS: { key: Step; label: string; icon: React.ReactNode }[] = [
+  { key: 'service', label: 'Serviço', icon: <Briefcase className="w-4 h-4" /> },
   { key: 'professional', label: 'Profissional', icon: <User className="w-4 h-4" /> },
-  { key: 'service', label: 'Servico', icon: <Briefcase className="w-4 h-4" /> },
   { key: 'datetime', label: 'Data & Hora', icon: <CalendarDays className="w-4 h-4" /> },
   { key: 'info', label: 'Seus Dados', icon: <UserCircle className="w-4 h-4" /> },
 ];
 
 export default function Booking() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>('professional');
+  const [step, setStep] = useState<Step>('service');
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
@@ -39,6 +39,14 @@ export default function Booking() {
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({ guestName: '', guestEmail: '', guestPhone: '' });
   const [error, setError] = useState('');
+
+    const allServices = Array.from(
+      new Map(
+        professionals.flatMap((p) => p.services).map((s) => [s.id, s])
+      ).values()
+    );
+
+  const availableProfessionals = professionals.filter((p) => p.services.some((s) => s.id === selectedService?.id));
 
   useEffect(() => {
     getProfessionals()
@@ -60,8 +68,8 @@ export default function Booking() {
 
   function canNext(): boolean {
     switch (step) {
-      case 'professional': return !!selectedProfessional;
       case 'service': return !!selectedService;
+      case 'professional': return !!selectedProfessional;
       case 'datetime': return !!selectedDate && !!selectedTime;
       case 'info': return !!(form.guestName && form.guestEmail && form.guestPhone);
     }
@@ -111,8 +119,8 @@ export default function Booking() {
           <CalendarCheck className="w-4 h-4" />
           Agendamento Online
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">Agende seu horario</h1>
-        <p className="text-gray-500 text-sm mt-1">Escolha o profissional, servico e melhor horario</p>
+        <h1 className="text-2xl font-bold text-gray-900">Agende seu horário</h1>
+        <p className="text-gray-500 text-sm mt-1">Escolha o profissional, serviço e melhor horário</p>
       </div>
 
       {/* Stepper */}
@@ -143,16 +151,14 @@ export default function Booking() {
         {step === 'professional' && (
           <div>
             <h2 className="text-base font-bold text-gray-900 mb-5">Escolha o profissional</h2>
-            {loading ? (
-              <Loading text="Carregando profissionais..." />
-            ) : professionals.length === 0 ? (
-              <p className="text-gray-400 text-sm text-center py-10">Nenhum profissional encontrado.</p>
+            {availableProfessionals.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-10">Nenhum profissional disponível para este serviço.</p>
             ) : (
               <div className="grid sm:grid-cols-2 gap-3">
-                {professionals.map((p) => (
+                {availableProfessionals.map((p) => (
                   <button
                     key={p.id}
-                    onClick={() => { setSelectedProfessional(p); setSelectedService(null); }}
+                    onClick={() => setSelectedProfessional(p)}
                     className={`flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
                       selectedProfessional?.id === p.id
                         ? 'border-primary bg-primary/5 shadow-sm'
@@ -178,17 +184,19 @@ export default function Booking() {
         )}
 
         {/* Step: Service */}
-        {step === 'service' && selectedProfessional && (
+        {step === 'service' && (
           <div>
-            <h2 className="text-base font-bold text-gray-900 mb-5">Escolha o servico</h2>
-            {selectedProfessional.services.length === 0 ? (
-              <p className="text-gray-400 text-sm text-center py-10">Nenhum servico disponivel para este profissional.</p>
+            <h2 className="text-base font-bold text-gray-900 mb-5">Escolha o serviço</h2>
+            {loading ? (
+              <Loading text="Carregando serviços..." />
+            ) : allServices.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-10">Nenhum serviço disponível.</p>
             ) : (
               <div className="space-y-3">
-                {selectedProfessional.services.map((s) => (
+                {allServices.map((s) => (
                   <button
                     key={s.id}
-                    onClick={() => setSelectedService(s)}
+                    onClick={() => { setSelectedService(s); setSelectedProfessional(null); }}
                     className={`w-full flex items-center justify-between p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
                       selectedService?.id === s.id
                         ? 'border-primary bg-primary/5 shadow-sm'
@@ -201,7 +209,7 @@ export default function Booking() {
                         <span className="text-xs text-gray-400 flex items-center gap-1">
                           <Clock className="w-3 h-3" /> {s.durationMinutes} min
                         </span>
-                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{s.category}</span>
+                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{s.category?.name}</span>
                       </div>
                     </div>
                     <span className="text-primary font-bold text-sm">R$ {Number(s.price).toFixed(2)}</span>
@@ -215,7 +223,7 @@ export default function Booking() {
         {/* Step: DateTime */}
         {step === 'datetime' && (
           <div>
-            <h2 className="text-base font-bold text-gray-900 mb-5">Escolha data e horario</h2>
+            <h2 className="text-base font-bold text-gray-900 mb-5">Escolha data e horário</h2>
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-600 mb-1.5">Data</label>
               <input
@@ -228,11 +236,11 @@ export default function Booking() {
             </div>
             {selectedDate && (
               <div>
-                <label className="block text-sm font-medium text-gray-600 mb-2">Horario</label>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Horário</label>
                 {loadingSlots ? (
-                  <Loading text="Buscando horarios..." />
+                  <Loading text="Buscando horários..." />
                 ) : slots.length === 0 ? (
-                  <p className="text-gray-400 text-sm py-4">Nenhum horario disponivel nesta data.</p>
+                  <p className="text-gray-400 text-sm py-4">Nenhum horário disponível nesta data.</p>
                 ) : (
                   <>
                     <div className="flex flex-wrap gap-2 mb-4">
@@ -276,9 +284,9 @@ export default function Booking() {
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Resumo</p>
                 <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-1.5">
                   <p className="text-gray-600"><span className="text-gray-900 font-medium">Profissional:</span> {selectedProfessional.name}</p>
-                  <p className="text-gray-600"><span className="text-gray-900 font-medium">Servico:</span> {selectedService.name}</p>
+                  <p className="text-gray-600"><span className="text-gray-900 font-medium">Serviço:</span> {selectedService.name}</p>
                   <p className="text-gray-600"><span className="text-gray-900 font-medium">Data:</span> {selectedDate.split('-').reverse().join('/')}</p>
-                  <p className="text-gray-600"><span className="text-gray-900 font-medium">Horario:</span> {selectedTime}</p>
+                  <p className="text-gray-600"><span className="text-gray-900 font-medium">Horário:</span> {selectedTime}</p>
                   <p className="text-gray-600"><span className="text-gray-900 font-medium">Valor:</span> R$ {Number(selectedService.price).toFixed(2)}</p>
                 </div>
               </div>
@@ -314,7 +322,7 @@ export default function Booking() {
             disabled={!canNext()}
             className="flex items-center gap-1.5 bg-primary text-white px-7 py-2.5 rounded-xl font-semibold text-sm hover:bg-primary-light disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-sm"
           >
-            Proximo <ChevronRight className="w-4 h-4" />
+            Próximo <ChevronRight className="w-4 h-4" />
           </button>
         )}
       </div>

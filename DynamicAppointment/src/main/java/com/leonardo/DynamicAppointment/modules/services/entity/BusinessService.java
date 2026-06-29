@@ -1,7 +1,7 @@
 package com.leonardo.DynamicAppointment.modules.services.entity;
 
+import com.leonardo.DynamicAppointment.modules.category.entity.Category;
 import com.leonardo.DynamicAppointment.modules.professional.entity.Professional;
-import com.leonardo.DynamicAppointment.modules.services.category.ServiceCategory;
 import com.leonardo.DynamicAppointment.modules.services.status.ServiceStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,8 +26,9 @@ public class BusinessService {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private ServiceCategory category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private Integer durationMinutes;
 

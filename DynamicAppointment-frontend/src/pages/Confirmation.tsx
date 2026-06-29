@@ -37,7 +37,7 @@ export default function Confirmation() {
       </div>
       <h1 className="text-3xl font-bold text-primary mb-2">Agendamento Confirmado!</h1>
       <p className="text-gray-500 mb-10">
-        Um e-mail de confirmacao foi enviado para{' '}
+        Um e-mail de confirmação foi enviado para{' '}
         <strong className="text-primary">{appointment.guestEmail}</strong>
       </p>
 
@@ -53,7 +53,7 @@ export default function Confirmation() {
           />
           <DetailRow
             icon={<Briefcase className="w-5 h-5 text-primary" />}
-            label="Servico"
+            label="Serviço"
             value={`${appointment.service.name} (${appointment.service.durationMinutes} min)`}
           />
           <DetailRow
@@ -63,7 +63,7 @@ export default function Confirmation() {
           />
           <DetailRow
             icon={<Clock className="w-5 h-5 text-primary" />}
-            label="Horario"
+            label="Horário"
             value={formattedTime}
           />
         </div>
@@ -101,7 +101,7 @@ export default function Confirmation() {
           to="/"
           className="border border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-colors no-underline"
         >
-          Voltar ao Inicio
+          Voltar ao Início
         </Link>
       </div>
     </section>

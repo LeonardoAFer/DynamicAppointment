@@ -2,6 +2,8 @@ import axios from 'axios';
 import type {
   Professional,
   BusinessService,
+  Category,
+  CategoryRequest,
   Slot,
   AppointmentRequest,
   AppointmentResponse,
@@ -117,6 +119,27 @@ export async function updateService(id: number, request: BusinessServiceRequest)
 
 export async function deleteService(id: number): Promise<void> {
   await api.delete(`/services/${id}`);
+}
+
+// ── Admin: Categories ──
+
+export async function getCategories(): Promise<Category[]> {
+  const { data } = await api.get<Category[]>('/categories');
+  return data;
+}
+
+export async function createCategory(request: CategoryRequest): Promise<Category> {
+  const { data } = await api.post<Category>('/categories', request);
+  return data;
+}
+
+export async function updateCategory(id: number, request: CategoryRequest): Promise<Category> {
+  const { data } = await api.put<Category>(`/categories/${id}`, request);
+  return data;
+}
+
+export async function deleteCategory(id: number): Promise<void> {
+  await api.delete(`/categories/${id}`);
 }
 
 // ── Admin: Appointments ──

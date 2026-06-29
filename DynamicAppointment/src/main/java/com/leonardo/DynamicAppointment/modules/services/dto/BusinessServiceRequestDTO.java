@@ -1,6 +1,5 @@
 package com.leonardo.DynamicAppointment.modules.services.dto;
 
-import com.leonardo.DynamicAppointment.modules.services.category.ServiceCategory;
 import com.leonardo.DynamicAppointment.modules.services.status.ServiceStatus;
 import lombok.Data;
 
@@ -15,7 +14,7 @@ public class BusinessServiceRequestDTO {
 
     private String description;
 
-    private ServiceCategory category;
+    private Long categoryId;
 
     private Integer durationMinutes;
 

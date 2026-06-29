@@ -35,7 +35,7 @@ export default function Dashboard() {
       link: '/admin/profissionais',
     },
     {
-      label: 'Servicos',
+      label: 'Serviços',
       count: serviceCount ?? 0,
       icon: Briefcase,
       color: 'bg-emerald-500',
@@ -56,7 +56,7 @@ export default function Dashboard() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-1">Visao geral do sistema</p>
+        <p className="text-gray-500 text-sm mt-1">Visão geral do sistema</p>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">

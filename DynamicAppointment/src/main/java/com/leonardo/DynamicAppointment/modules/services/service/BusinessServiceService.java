@@ -2,6 +2,7 @@ package com.leonardo.DynamicAppointment.modules.services.service;
 
 import com.leonardo.DynamicAppointment.core.util.UpdateHelper;
 import com.leonardo.DynamicAppointment.modules.appointment.repository.AppointmentRepository;
+import com.leonardo.DynamicAppointment.modules.category.service.ICategoryService;
 import com.leonardo.DynamicAppointment.modules.professional.service.IProfessionalService;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceRequestDTO;
 import com.leonardo.DynamicAppointment.modules.services.dto.BusinessServiceResponseDTO;
@@ -20,15 +21,18 @@ public class BusinessServiceService implements IBusinessServiceService {
     private final BusinessServiceRepository businessServiceRepository;
     private final IProfessionalService professionalService;
     private final AppointmentRepository appointmentRepository;
+    private final ICategoryService categoryService;
     private final ModelMapper mapper;
 
     BusinessServiceService(BusinessServiceRepository businessServiceRepository,
                            @Lazy IProfessionalService professionalService,
                            AppointmentRepository appointmentRepository,
+                           ICategoryService categoryService,
                            ModelMapper mapper) {
         this.businessServiceRepository = businessServiceRepository;
         this.professionalService = professionalService;
         this.appointmentRepository = appointmentRepository;
+        this.categoryService = categoryService;
         this.mapper = mapper;
     }
 
@@ -42,7 +46,12 @@ public class BusinessServiceService implements IBusinessServiceService {
     @Override
     public BusinessServiceResponseDTO create(BusinessServiceRequestDTO request) {
         BusinessService businessService = mapper.map(request, BusinessService.class);
+        businessService.setId(null);
         businessService.setCreatedAt(LocalDateTime.now());
+
+        if (request.getCategoryId() != null) {
+            businessService.setCategory(categoryService.findEntityById(request.getCategoryId()));
+        }
 
         businessServiceRepository.save(businessService);
 
@@ -66,7 +75,7 @@ public class BusinessServiceService implements IBusinessServiceService {
                 .orElseThrow(() -> new RuntimeException("Service not found with id: " + id));
 
         businessService.setUpdatedAt(LocalDateTime.now());
-        UpdateHelper.updateIfPresent(request.getCategory(), businessService::setCategory);
+        UpdateHelper.updateIfPresent(request.getCategoryId(), catId -> businessService.setCategory(categoryService.findEntityById(catId)));
         UpdateHelper.updateIfPresent(request.getName(), businessService::setName);
         UpdateHelper.updateIfPresent(request.getDescription(), businessService::setDescription);
         UpdateHelper.updateIfPresent(request.getPrice(), businessService::setPrice);
@@ -86,10 +95,10 @@ public class BusinessServiceService implements IBusinessServiceService {
     @Override
     public void delete(Long id) {
         BusinessService service = businessServiceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado."));
+                .orElseThrow(() -> new RuntimeException("Serviço não encontrado."));
 
         if (appointmentRepository.existsByServiceId(id)) {
-            throw new IllegalStateException("Nao e possivel excluir este servico pois existem agendamentos vinculados.");
+            throw new IllegalStateException("Não é possível excluir este serviço pois existem agendamentos vinculados.");
         }
 
         professionalService.dissociateServiceFromAll(service);

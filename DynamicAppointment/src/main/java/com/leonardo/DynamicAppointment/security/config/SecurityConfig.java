@@ -52,6 +52,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/services/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/services/{id}").hasRole("ADMIN")
 
+                // Categories - GET public, write operations admin-only
+                .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/categories").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/categories/{id}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/categories/{id}").hasRole("ADMIN")
+
                 // Appointments - guest endpoints public, management admin-only
                 .requestMatchers(HttpMethod.POST, "/api/appointments").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/appointments/availability").permitAll()
