@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BusinessServiceRepository extends JpaRepository<BusinessService, Long> {
+    boolean existsByCategoryId(Long categoryId);
 }

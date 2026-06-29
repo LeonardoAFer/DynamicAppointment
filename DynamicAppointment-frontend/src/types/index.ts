@@ -1,3 +1,19 @@
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface CategoryRequest {
+  name: string;
+  description: string;
+}
+
+export interface CategorySummary {
+  id: number;
+  name: string;
+}
+
 export interface Professional {
   id: number;
   name: string;
@@ -11,7 +27,7 @@ export interface Professional {
 export interface ServiceSummary {
   id: number;
   name: string;
-  category: string;
+  category: CategorySummary;
   price: number;
   durationMinutes: number;
 }
@@ -20,7 +36,7 @@ export interface BusinessService {
   id: number;
   name: string;
   description: string;
-  category: string;
+  category: CategorySummary;
   durationMinutes: number;
   cleanupMinutes: number;
   price: number;
@@ -75,7 +91,7 @@ export interface ProfessionalRequest {
 export interface BusinessServiceRequest {
   name: string;
   description: string;
-  category: string;
+  categoryId: number;
   durationMinutes: number;
   cleanupMinutes: number;
   price: number;

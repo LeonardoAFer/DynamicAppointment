@@ -11,6 +11,7 @@ import Dashboard from './pages/admin/Dashboard';
 import Professionals from './pages/admin/Professionals';
 import Services from './pages/admin/Services';
 import Appointments from './pages/admin/Appointments';
+import Categories from './pages/admin/Categories';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="profissionais" element={<Professionals />} />
                 <Route path="servicos" element={<Services />} />
+                <Route path="categorias" element={<Categories />} />
                 <Route path="agendamentos" element={<Appointments />} />
               </Route>
             </Route>

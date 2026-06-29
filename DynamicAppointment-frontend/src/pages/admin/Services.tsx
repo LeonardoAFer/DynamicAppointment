@@ -3,16 +3,12 @@ import {
   Plus, Pencil, Trash2, X, Loader2, Search, Briefcase,
 } from 'lucide-react';
 import {
-  getServices, getProfessionals, createService, updateService, deleteService,
+  getServices, getProfessionals, getCategories, createService, updateService, deleteService,
 } from '../../services/api';
-import type { BusinessService, Professional, BusinessServiceRequest } from '../../types';
+import type { BusinessService, Professional, BusinessServiceRequest, Category } from '../../types';
 import { useToast } from '../../components/Toast';
 import ConfirmDialog from '../../components/ConfirmDialog';
 
-const CATEGORIES = ['HAIR', 'BEARD', 'COMBO', 'GROOMING', 'BATH'] as const;
-const CATEGORY_LABELS: Record<string, string> = {
-  HAIR: 'Cabelo', BEARD: 'Barba', COMBO: 'Combo', GROOMING: 'Cuidados', BATH: 'Banho',
-};
 const SERVICE_STATUSES = ['ACTIVE', 'INACTIVE'] as const;
 const STATUS_LABELS: Record<string, string> = { ACTIVE: 'Ativo', INACTIVE: 'Inativo' };
 const STATUS_COLORS: Record<string, string> = {
@@ -20,7 +16,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 const emptyForm: BusinessServiceRequest = {
-  name: '', description: '', category: 'HAIR', durationMinutes: 30,
+  name: '', description: '', categoryId: 0, durationMinutes: 30,
   cleanupMinutes: 10, price: 0, status: 'ACTIVE', professionalIds: [],
 };
 
@@ -28,6 +24,7 @@ export default function Services() {
   const { toast } = useToast();
   const [services, setServices] = useState<BusinessService[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -42,15 +39,16 @@ export default function Services() {
 
   async function loadData() {
     setLoading(true);
-    const [s, p] = await Promise.all([getServices(), getProfessionals()]);
+    const [s, p, c] = await Promise.all([getServices(), getProfessionals(), getCategories()]);
     setServices(s);
     setProfessionals(p);
+    setCategories(c);
     setLoading(false);
   }
 
   function openCreate() {
     setEditingId(null);
-    setForm({ ...emptyForm });
+    setForm({ ...emptyForm, categoryId: categories[0]?.id ?? 0 });
     setFormError('');
     setShowModal(true);
   }
@@ -58,7 +56,7 @@ export default function Services() {
   function openEdit(s: BusinessService) {
     setEditingId(s.id);
     setForm({
-      name: s.name, description: s.description || '', category: s.category,
+      name: s.name, description: s.description || '', categoryId: s.category?.id ?? 0,
       durationMinutes: s.durationMinutes, cleanupMinutes: s.cleanupMinutes,
       price: s.price, status: s.status, professionalIds: s.professionals.map((p) => p.id),
     });
@@ -155,7 +153,7 @@ export default function Services() {
                 <div>
                   <h3 className="font-bold text-gray-900">{s.name}</h3>
                   <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary mt-1">
-                    {CATEGORY_LABELS[s.category] || s.category}
+                    {s.category?.name ?? '—'}
                   </span>
                 </div>
                 <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[s.status] || 'bg-gray-100 text-gray-500'}`}>
@@ -166,7 +164,7 @@ export default function Services() {
               <div className="flex items-center justify-between text-sm mb-4">
                 <div className="flex gap-3 text-gray-500">
                   <span>{s.durationMinutes} min</span>
-                  {s.cleanupMinutes > 0 && <span className="text-gray-300">+{s.cleanupMinutes} limpeza</span>}
+                  {s.cleanupMinutes > 0 && <span className="text-gray-300">+{s.cleanupMinutes} intervalo</span>}
                 </div>
                 <span className="font-bold text-primary">R$ {Number(s.price).toFixed(2)}</span>
               </div>
@@ -205,8 +203,8 @@ export default function Services() {
             </FormField>
             <div className="grid grid-cols-2 gap-4">
               <FormField label="Categoria">
-                <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="form-input">
-                  {CATEGORIES.map((c) => <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>)}
+                <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: +e.target.value })} className="form-input">
+                  {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </FormField>
               <FormField label="Status">
@@ -219,7 +217,7 @@ export default function Services() {
               <FormField label="Duracao (min)">
                 <input type="number" min={1} value={form.durationMinutes} onChange={(e) => setForm({ ...form, durationMinutes: +e.target.value })} required className="form-input" />
               </FormField>
-              <FormField label="Limpeza (min)">
+              <FormField label="Intervalo (min)">
                 <input type="number" min={0} value={form.cleanupMinutes} onChange={(e) => setForm({ ...form, cleanupMinutes: +e.target.value })} className="form-input" />
               </FormField>
               <FormField label="Preco (R$)">
