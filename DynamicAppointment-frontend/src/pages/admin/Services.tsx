@@ -71,16 +71,16 @@ export default function Services() {
     try {
       if (editingId) {
         await updateService(editingId, form);
-        toast('success', 'Servico atualizado com sucesso!');
+        toast('success', 'Serviço atualizado com sucesso!');
       } else {
         await createService(form);
-        toast('success', 'Servico criado com sucesso!');
+        toast('success', 'Serviço criado com sucesso!');
       }
       setShowModal(false);
       await loadData();
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
-      setFormError(msg || 'Erro ao salvar servico.');
+      setFormError(msg || 'Erro ao salvar serviço.');
     } finally {
       setSaving(false);
     }
@@ -91,12 +91,12 @@ export default function Services() {
     setDeleting(true);
     try {
       await deleteService(deleteTarget.id);
-      toast('success', 'Servico excluido com sucesso!');
+      toast('success', 'Serviço excluído com sucesso!');
       setDeleteTarget(null);
       await loadData();
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
-      toast('error', msg || 'Erro ao excluir servico.');
+      toast('error', msg || 'Erro ao excluir serviço.');
       setDeleteTarget(null);
     } finally {
       setDeleting(false);
@@ -126,11 +126,11 @@ export default function Services() {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Servicos</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Serviços</h1>
           <p className="text-gray-500 text-sm mt-1">{services.length} cadastrados</p>
         </div>
         <button onClick={openCreate} className="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-primary-light transition-all cursor-pointer shadow-sm">
-          <Plus className="w-4 h-4" /> Novo Servico
+          <Plus className="w-4 h-4" /> Novo Serviço
         </button>
       </div>
 
@@ -143,7 +143,7 @@ export default function Services() {
       {filtered.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
           <Briefcase className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 text-sm">Nenhum servico encontrado.</p>
+          <p className="text-gray-500 text-sm">Nenhum serviço encontrado.</p>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -183,8 +183,8 @@ export default function Services() {
 
       {deleteTarget && (
         <ConfirmDialog
-          title="Excluir servico"
-          message={`Tem certeza que deseja excluir "${deleteTarget.name}"? Esta acao nao pode ser desfeita.`}
+          title="Excluir serviço"
+          message={`Tem certeza que deseja excluir "${deleteTarget.name}"? Esta ação não pode ser desfeita.`}
           confirmLabel="Excluir"
           loading={deleting}
           onConfirm={handleDelete}
@@ -193,13 +193,13 @@ export default function Services() {
       )}
 
       {showModal && (
-        <Modal title={editingId ? 'Editar Servico' : 'Novo Servico'} onClose={() => setShowModal(false)}>
+        <Modal title={editingId ? 'Editar Serviço' : 'Novo Serviço'} onClose={() => setShowModal(false)}>
           <form onSubmit={handleSave} className="space-y-4">
             <FormField label="Nome">
-              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="form-input" placeholder="Nome do servico" />
+              <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required className="form-input" placeholder="Nome do serviço" />
             </FormField>
-            <FormField label="Descricao">
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input min-h-[80px] resize-none" placeholder="Descricao opcional..." />
+            <FormField label="Descrição">
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input min-h-[80px] resize-none" placeholder="Descrição opcional..." />
             </FormField>
             <div className="grid grid-cols-2 gap-4">
               <FormField label="Categoria">
@@ -214,7 +214,7 @@ export default function Services() {
               </FormField>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <FormField label="Duracao (min)">
+              <FormField label="Duração (min)">
                 <input type="number" min={1} value={form.durationMinutes} onChange={(e) => setForm({ ...form, durationMinutes: +e.target.value })} required className="form-input" />
               </FormField>
               <FormField label="Intervalo (min)">

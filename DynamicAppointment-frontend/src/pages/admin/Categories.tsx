@@ -69,7 +69,7 @@ export default function Categories() {
     setDeleting(true);
     try {
       await deleteCategory(deleteTarget.id);
-      toast('success', 'Categoria excluida com sucesso!');
+      toast('success', 'Categoria excluída com sucesso!');
       setDeleteTarget(null);
       await loadData();
     } catch (err: unknown) {
@@ -159,7 +159,7 @@ export default function Categories() {
       {deleteTarget && (
         <ConfirmDialog
           title="Excluir categoria"
-          message={`Tem certeza que deseja excluir "${deleteTarget.name}"? Esta acao nao pode ser desfeita.`}
+          message={`Tem certeza que deseja excluir "${deleteTarget.name}"? Esta ação não pode ser desfeita.`}
           confirmLabel="Excluir"
           loading={deleting}
           onConfirm={handleDelete}
@@ -183,12 +183,12 @@ export default function Categories() {
                 placeholder="Ex: Corte de Cabelo"
               />
             </FormField>
-            <FormField label="Descricao">
+            <FormField label="Descrição">
               <textarea
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="form-input min-h-[80px] resize-none"
-                placeholder="Descricao opcional..."
+                placeholder="Descrição opcional..."
               />
             </FormField>
             {formError && (

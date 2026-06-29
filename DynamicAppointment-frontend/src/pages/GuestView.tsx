@@ -23,7 +23,7 @@ export default function GuestView() {
     if (!token) return;
     getAppointmentByToken(token)
       .then(setAppointment)
-      .catch(() => setError('Agendamento nao encontrado.'))
+      .catch(() => setError('Agendamento não encontrado.'))
       .finally(() => setLoading(false));
   }, [token]);
 
@@ -55,13 +55,13 @@ export default function GuestView() {
         <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-6">
           <XCircle className="w-7 h-7 text-red-400" />
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Agendamento nao encontrado</h1>
-        <p className="text-gray-500 mb-8 text-sm">O link pode estar invalido ou expirado.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Agendamento não encontrado</h1>
+        <p className="text-gray-500 mb-8 text-sm">O link pode estar inválido ou expirado.</p>
         <Link
           to="/"
           className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-semibold text-sm no-underline hover:bg-primary-light transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" /> Voltar ao inicio
+          <ArrowLeft className="w-4 h-4" /> Voltar ao início
         </Link>
       </section>
     );
@@ -83,7 +83,7 @@ export default function GuestView() {
         to="/"
         className="inline-flex items-center gap-1.5 text-gray-400 hover:text-primary transition-colors no-underline text-sm mb-8"
       >
-        <ArrowLeft className="w-4 h-4" /> Inicio
+        <ArrowLeft className="w-4 h-4" /> Início
       </Link>
 
       <div className="bg-white rounded-3xl shadow-[0_4px_24px_-8px_rgba(30,136,229,0.12)] border border-gray-100 overflow-hidden">
@@ -142,14 +142,14 @@ export default function GuestView() {
 
         <div className="px-8 py-7">
           <p className="text-gray-500 text-sm mb-5">
-            Ola, <span className="font-semibold text-gray-900">{firstName}</span>. Aqui
-            estao os detalhes da sua reserva.
+            Olá, <span className="font-semibold text-gray-900">{firstName}</span>. Aqui
+            estão os detalhes da sua reserva.
           </p>
           <dl className="grid grid-cols-2 gap-px bg-gray-100 rounded-2xl overflow-hidden">
             <Cell label="Profissional" value={appointment.professional.name} />
-            <Cell label="Servico" value={appointment.service.name} />
+            <Cell label="Serviço" value={appointment.service.name} />
             <Cell
-              label="Duracao"
+              label="Duração"
               value={`${appointment.service.durationMinutes} min`}
             />
             <Cell
@@ -170,7 +170,7 @@ export default function GuestView() {
                       Cancelar este agendamento?
                     </p>
                     <p className="text-red-600/70 text-sm mt-0.5">
-                      Esta acao nao pode ser desfeita.
+                      Esta ação não pode ser desfeita.
                     </p>
                   </div>
                 </div>
@@ -210,7 +210,7 @@ export default function GuestView() {
 
       {!isCancelled && (
         <p className="text-center text-xs text-gray-400 mt-6">
-          Recomendamos chegar 5 minutos antes do horario marcado.
+          Recomendamos chegar 5 minutos antes do horário marcado.
         </p>
       )}
     </section>

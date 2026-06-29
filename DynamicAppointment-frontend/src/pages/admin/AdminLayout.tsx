@@ -6,7 +6,7 @@ import { useState } from 'react';
 const NAV = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
   { to: '/admin/profissionais', icon: Users, label: 'Profissionais', end: false },
-  { to: '/admin/servicos', icon: Briefcase, label: 'Servicos', end: false },
+  { to: '/admin/servicos', icon: Briefcase, label: 'Serviços', end: false },
   { to: '/admin/categorias', icon: Tag, label: 'Categorias', end: false },
   { to: '/admin/agendamentos', icon: CalendarDays, label: 'Agendamentos', end: false },
 ];
@@ -33,7 +33,7 @@ export default function AdminLayout() {
       <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-gray-900 text-white flex flex-col transition-transform lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="px-6 py-6 border-b border-white/10">
           <h1 className="text-lg font-bold">Admin Panel</h1>
-          <p className="text-gray-500 text-xs mt-0.5">Gestao de Agendamentos</p>
+          <p className="text-gray-500 text-xs mt-0.5">Gestão de Agendamentos</p>
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1">
