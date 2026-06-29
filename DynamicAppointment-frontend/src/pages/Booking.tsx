@@ -201,7 +201,7 @@ export default function Booking() {
                         <span className="text-xs text-gray-400 flex items-center gap-1">
                           <Clock className="w-3 h-3" /> {s.durationMinutes} min
                         </span>
-                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{s.category}</span>
+                        <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">{s.category?.name}</span>
                       </div>
                     </div>
                     <span className="text-primary font-bold text-sm">R$ {Number(s.price).toFixed(2)}</span>

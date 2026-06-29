@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { Users, Briefcase, CalendarDays, LogOut, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Users, Briefcase, CalendarDays, LogOut, LayoutDashboard, Menu, X, Tag } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 
@@ -7,6 +7,7 @@ const NAV = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
   { to: '/admin/profissionais', icon: Users, label: 'Profissionais', end: false },
   { to: '/admin/servicos', icon: Briefcase, label: 'Servicos', end: false },
+  { to: '/admin/categorias', icon: Tag, label: 'Categorias', end: false },
   { to: '/admin/agendamentos', icon: CalendarDays, label: 'Agendamentos', end: false },
 ];
 
