@@ -24,7 +24,7 @@ export default function Login() {
       toast('success', 'Login realizado com sucesso!');
       navigate('/admin');
     } catch {
-      setError('Credenciais invalidas. Tente novamente.');
+      setError('Credenciais inválidas. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function Login() {
               Bem-vindo de volta
             </h1>
             <p className="text-gray-500 text-sm mt-1.5">
-              Acesse o painel para gerenciar seu negocio.
+              Acesse o painel para gerenciar seu negócio.
             </p>
           </div>
 
@@ -62,7 +62,7 @@ export default function Login() {
                 htmlFor="username"
                 className="block text-xs font-medium text-gray-700 mb-1.5"
               >
-                Usuario
+                Usuário
               </label>
               <input
                 id="username"

@@ -13,7 +13,7 @@ const STATUSES = ['ACTIVE', 'INACTIVE', 'ON_VACATION', 'SUSPENDED'] as const;
 const STATUS_LABELS: Record<string, string> = {
   ACTIVE: 'Ativo',
   INACTIVE: 'Inativo',
-  ON_VACATION: 'Ferias',
+  ON_VACATION: 'Férias',
   SUSPENDED: 'Suspenso',
 };
 const STATUS_COLORS: Record<string, string> = {
@@ -99,7 +99,7 @@ export default function Professionals() {
     setDeleting(true);
     try {
       await deleteProfessional(deleteTarget.id);
-      toast('success', 'Profissional excluido com sucesso!');
+      toast('success', 'Profissional excluído com sucesso!');
       setDeleteTarget(null);
       await loadData();
     } catch (err: unknown) {
@@ -171,9 +171,9 @@ export default function Professionals() {
                 <tr className="border-b border-gray-100">
                   <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Profissional</th>
                   <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Email</th>
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Horario</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Horário</th>
                   <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</th>
-                  <th className="text-right px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Acoes</th>
+                  <th className="text-right px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -228,7 +228,7 @@ export default function Professionals() {
       {deleteTarget && (
         <ConfirmDialog
           title={`Excluir ${deleteTarget.name}?`}
-          message={'Todos os agendamentos vinculados a este profissional tambem serao excluidos. Esta acao nao pode ser desfeita.'}
+          message={'Todos os agendamentos vinculados a este profissional também serão excluídos. Esta ação não pode ser desfeita.'}
           confirmLabel="Sim, excluir"
           loading={deleting}
           onConfirm={handleDelete}
@@ -246,7 +246,7 @@ export default function Professionals() {
               <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required className="form-input" placeholder="email@exemplo.com" />
             </FormField>
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Inicio">
+              <FormField label="Início">
                 <input type="time" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} required className="form-input" />
               </FormField>
               <FormField label="Fim">
@@ -259,7 +259,7 @@ export default function Professionals() {
               </select>
             </FormField>
             {services.length > 0 && (
-              <FormField label="Servicos">
+              <FormField label="Serviços">
                 <div className="flex flex-wrap gap-2">
                   {services.map((s) => (
                     <button

@@ -95,10 +95,10 @@ public class BusinessServiceService implements IBusinessServiceService {
     @Override
     public void delete(Long id) {
         BusinessService service = businessServiceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico nao encontrado."));
+                .orElseThrow(() -> new RuntimeException("Serviço não encontrado."));
 
         if (appointmentRepository.existsByServiceId(id)) {
-            throw new IllegalStateException("Nao e possivel excluir este servico pois existem agendamentos vinculados.");
+            throw new IllegalStateException("Não é possível excluir este serviço pois existem agendamentos vinculados.");
         }
 
         professionalService.dissociateServiceFromAll(service);

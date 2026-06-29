@@ -52,7 +52,7 @@ public class SchedulingOrchestrator {
                 .plusMinutes(service.getCleanupMinutes());
 
         if (requestedStart.isBefore(professional.getStartTime()) || requestedEnd.isAfter(professional.getEndTime())) {
-            throw new IllegalStateException("O horario solicitado esta fora do expediente do profissional ("
+            throw new IllegalStateException("O horário solicitado está fora do expediente do profissional ("
                     + professional.getStartTime() + " - " + professional.getEndTime() + ")");
         }
 
@@ -65,7 +65,7 @@ public class SchedulingOrchestrator {
                         && requestedEnd.isAfter(scheduled.getStartTime()));
 
         if (hasConflict) {
-            throw new IllegalStateException("O horario solicitado conflita com um agendamento existente");
+            throw new IllegalStateException("O horário solicitado conflita com um agendamento existente");
         }
 
         AppointmentResponseDTO response = appointmentService.create(request);
@@ -95,7 +95,7 @@ public class SchedulingOrchestrator {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        String cancelUrl = "http://localhost:8080/api/appointments/guest/" + appointment.getAccessToken() + "/cancel";
+        String cancelUrl = "http://localhost:5174/meu-agendamento/" + appointment.getAccessToken();
 
         String html = loadTemplate("templates/appointment-confirmation.html", Map.of(
                 "guestName", appointment.getGuestName(),

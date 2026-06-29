@@ -17,18 +17,18 @@ export default function Home() {
           </div>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Agende seu
-            <span className="text-surface-dark block">horario agora</span>
+            <span className="text-surface-dark block">horário agora</span>
           </h1>
           <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            Escolha o profissional, o servico e o melhor horario para voce.
-            Simples, rapido e sem complicacao.
+            Escolha o profissional, o serviço e o melhor horário para você.
+            Simples, rápido e sem complicação.
           </p>
           <Link
             to="/agendar"
             className="inline-flex items-center gap-3 bg-white text-primary px-8 py-4 rounded-xl font-bold text-lg hover:bg-surface-dark transition-all duration-300 no-underline shadow-lg shadow-white/20 hover:shadow-white/40 hover:-translate-y-0.5"
           >
             <CalendarCheck className="w-5 h-5" />
-            Agendar Horario
+            Agendar Horário
           </Link>
         </div>
       </section>
@@ -45,17 +45,17 @@ export default function Home() {
           <FeatureCard
             icon={<Clock className="w-7 h-7" />}
             title="Agendamento Online"
-            description="Escolha o melhor horario sem precisar ligar. Agende de qualquer lugar, a qualquer momento."
+            description="Escolha o melhor horário sem precisar ligar. Agende de qualquer lugar, a qualquer momento."
           />
           <FeatureCard
             icon={<Star className="w-7 h-7" />}
             title="Profissionais Qualificados"
-            description="Nossa equipe e formada por profissionais experientes e apaixonados pelo que fazem."
+            description="Nossa equipe é formada por profissionais experientes e apaixonados pelo que fazem."
           />
           <FeatureCard
             icon={<Briefcase className="w-7 h-7" />}
-            title="Servicos Variados"
-            description="Diversos servicos disponiveis para voce. Tudo em um so lugar, com praticidade."
+            title="Serviços Variados"
+            description="Diversos serviços disponíveis para você. Tudo em um só lugar, com praticidade."
           />
         </div>
       </section>
@@ -66,7 +66,7 @@ export default function Home() {
           Pronto para agendar?
         </h2>
         <p className="text-white/60 mb-8 text-lg">
-          Faca seu agendamento agora e garanta seu horario.
+          Faça seu agendamento agora e garanta seu horário.
         </p>
         <Link
           to="/agendar"

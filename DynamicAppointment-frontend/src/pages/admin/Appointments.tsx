@@ -8,7 +8,7 @@ import { useToast } from '../../components/Toast';
 import ConfirmDialog from '../../components/ConfirmDialog';
 
 const STATUS_LABELS: Record<string, string> = {
-  PENDING: 'Pendente', CONFIRMED: 'Confirmado', CANCELLED: 'Cancelado', COMPLETED: 'Concluido',
+  PENDING: 'Pendente', CONFIRMED: 'Confirmado', CANCELLED: 'Cancelado', COMPLETED: 'Concluído',
 };
 const STATUS_COLORS: Record<string, string> = {
   PENDING: 'bg-amber-50 text-amber-700',
@@ -56,7 +56,7 @@ export default function Appointments() {
     setDeleting(true);
     try {
       await deleteAppointment(deleteTarget);
-      toast('success', 'Agendamento excluido com sucesso!');
+      toast('success', 'Agendamento excluído com sucesso!');
       setDeleteTarget(null);
       setViewAppointment(null);
       if (selectedProfId) {
@@ -102,7 +102,7 @@ export default function Appointments() {
               className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Ate</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">Até</label>
             <input type="date" value={dateRange.end} onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
               className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" />
           </div>
@@ -116,7 +116,7 @@ export default function Appointments() {
       ) : slots.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
           <CalendarDays className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500 text-sm">Nenhum agendamento encontrado neste periodo.</p>
+          <p className="text-gray-500 text-sm">Nenhum agendamento encontrado neste período.</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
@@ -124,7 +124,7 @@ export default function Appointments() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Horario</th>
+                  <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Horário</th>
                   <th className="text-left px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Fim</th>
                 </tr>
               </thead>
@@ -144,7 +144,7 @@ export default function Appointments() {
       {deleteTarget !== null && (
         <ConfirmDialog
           title="Excluir agendamento"
-          message="Tem certeza que deseja excluir este agendamento? Esta acao nao pode ser desfeita."
+          message="Tem certeza que deseja excluir este agendamento? Esta ação não pode ser desfeita."
           confirmLabel="Excluir"
           loading={deleting}
           onConfirm={handleDelete}
@@ -169,7 +169,7 @@ export default function Appointments() {
               <DetailRow icon={<User className="w-4 h-4 text-primary" />} label="Cliente" value={viewAppointment.guestName} />
               <DetailRow icon={<Mail className="w-4 h-4 text-primary" />} label="Email" value={viewAppointment.guestEmail} />
               <DetailRow icon={<Phone className="w-4 h-4 text-primary" />} label="Telefone" value={viewAppointment.guestPhone} />
-              <DetailRow icon={<Briefcase className="w-4 h-4 text-primary" />} label="Servico" value={viewAppointment.service.name} />
+              <DetailRow icon={<Briefcase className="w-4 h-4 text-primary" />} label="Serviço" value={viewAppointment.service.name} />
               <DetailRow icon={<Calendar className="w-4 h-4 text-primary" />} label="Data/Hora" value={new Date(viewAppointment.scheduledAt).toLocaleString('pt-BR')} />
             </div>
             <div className="flex gap-3 pt-4 border-t border-gray-100">
